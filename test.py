@@ -8,9 +8,12 @@ def read_keys_from_file(filename="Appkey.txt"):
         lines = f.read().splitlines()
         endpoint = lines[0].strip()
         api_key = lines[1].strip()
-    return endpoint, api_key
+        search_key = lines[2].strip()
+        search_endpoint = lines[3].strip()
+        index_name = lines[4].strip()
+    return endpoint, api_key,search_key,search_endpoint,index_name
 
-endpoint, api_key = read_keys_from_file()
+endpoint, api_key,search_key,search_endpoint,index_name= read_keys_from_file()
 deployment = os.getenv("DEPLOYMENT_NAME", "gpt-4.1")
       
 # Initialize Azure OpenAI client with Entra ID authentication
@@ -35,6 +38,18 @@ chat_prompt = [
     }
 ]
 
+data_sources = [
+    {
+        "type": "azure_search",
+        "parameters": {
+            "endpoint": search_endpoint,
+            "key": search_key,
+            "index_name": index_name,
+            # Optional: filters, fields, etc.
+        }
+    }
+]
+
 # Include speech result if speech is enabled
 messages = chat_prompt
 
@@ -47,7 +62,8 @@ completion = client.chat.completions.create(
     frequency_penalty=0,
     presence_penalty=0,
     stop=None,
-    stream=False
+    stream=False#,
+    # data_sources=data_sources  # <-- Add this line
 )
 
 print(completion.to_json())
