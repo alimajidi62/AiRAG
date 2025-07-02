@@ -62,8 +62,12 @@ completion = client.chat.completions.create(
     frequency_penalty=0,
     presence_penalty=0,
     stop=None,
-    stream=False#,
-    # data_sources=data_sources  # <-- Add this line
+    stream=False,
+    
+extra_body={
+"data_sources": data_sources
+}
+  # <-- Add this line
 )
 
 print(completion.to_json())
