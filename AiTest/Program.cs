@@ -25,7 +25,7 @@ async Task RunAsync()
     // Create a list of chat messages
     var messages = new List<ChatMessage>
     {
-        new SystemChatMessage(@"You are an AI assistant that helps people find information."),
+        new SystemChatMessage(@"who is mahmoud ahmadinejad? "),
     };
 
     // Create chat completion options
@@ -47,7 +47,8 @@ async Task RunAsync()
         // Print the response
         if (completion != null)
         {
-            Console.WriteLine(JsonSerializer.Serialize(completion, new JsonSerializerOptions() { WriteIndented = true }));
+            var messageOutput = JsonSerializer.Serialize(completion, new JsonSerializerOptions() { WriteIndented = true });
+            Console.WriteLine(messageOutput);
         }
         else
         {
