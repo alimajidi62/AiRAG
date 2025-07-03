@@ -25,7 +25,7 @@ async Task RunAsync()
     // Create a list of chat messages
     var messages = new List<ChatMessage>
     {
-        new SystemChatMessage(@"who is mahmoud ahmadinejad? "),
+        new SystemChatMessage(@"which countries were beaten in world war 2?"),
     };
 
     // Create chat completion options
@@ -47,8 +47,11 @@ async Task RunAsync()
         // Print the response
         if (completion != null)
         {
-            var messageOutput = JsonSerializer.Serialize(completion, new JsonSerializerOptions() { WriteIndented = true });
-            Console.WriteLine(messageOutput);
+            Console.WriteLine(messages[0].Content[0].Text+"\n\n");
+            var textOnly = completion.Content?[0]?.Text;
+            Console.WriteLine(textOnly);
+
+            //Console.WriteLine(messageOutput);
         }
         else
         {
