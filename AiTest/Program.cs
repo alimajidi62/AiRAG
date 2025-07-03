@@ -1,12 +1,12 @@
 ﻿using Azure;
 using Azure.AI.OpenAI;
+using Azure.Search.Documents;
+using Azure.Search.Documents.Models;
 using OpenAI.Chat;
 using System.Text.Json;
 
 async Task RunAsync()
 {
-    // Retrieve the OpenAI endpoint from environment variables
-
     string[] lines = File.ReadAllLines(@"C:\Majidi\Testcode\Py\AiRAG\Appkey.txt");
     string endpoint = lines[0].Trim();
     string apiKey = lines[1].Trim();
@@ -15,48 +15,46 @@ async Task RunAsync()
     string indexName = lines[4].Trim();
 
     var credential = new AzureKeyCredential(apiKey);
+    var searchCredential = new AzureKeyCredential(searchKey);
 
-    // Initialize the AzureOpenAIClient
+    // Step 1: Search your index
+    var searchClient = new SearchClient(new Uri(searchEndpoint), indexName, searchCredential);
+    //string userQuestion = "what is Case Blue in world war 2?";
+    string userQuestion = "who is the winner of the world war 2?";
+    var searchResults = await searchClient.SearchAsync<SearchDocument>(userQuestion, new SearchOptions { Size = 5 });
+
+    // Step 2: Extract content from search results
+    var contextBuilder = new System.Text.StringBuilder();
+    await foreach (var result in searchResults.Value.GetResultsAsync())
+    {
+        if (result.Document.TryGetValue("content", out var content))
+        {
+            contextBuilder.AppendLine(content.ToString());
+        }
+    }
+
+    string context = contextBuilder.ToString();
+
+    // Step 3: Use Azure OpenAI with context
     var azureClient = new AzureOpenAIClient(new Uri(endpoint), credential);
-
-    // Initialize the ChatClient with the specified deployment name
     ChatClient chatClient = azureClient.GetChatClient("gpt-4.1");
 
-    // Create a list of chat messages
     var messages = new List<ChatMessage>
     {
-        new SystemChatMessage(@"which countries were beaten in world war 2?"),
+        new SystemChatMessage("You are a helpful assistant. Use just the  provided context to answer the question.please not use the other data you might have"),
+        new UserChatMessage($"Context:\n{context}\n\nQuestion: {userQuestion}")
     };
 
-    // Create chat completion options
     var options = new ChatCompletionOptions
     {
-        Temperature = (float)1,
-        MaxOutputTokenCount = 800,
-
-        TopP = (float)1,
-        FrequencyPenalty = (float)0,
-        PresencePenalty = (float)0
+        Temperature = 0.7f,
+        MaxOutputTokenCount = 800
     };
 
     try
     {
-        // Create the chat completion request
         ChatCompletion completion = await chatClient.CompleteChatAsync(messages, options);
-
-        // Print the response
-        if (completion != null)
-        {
-            Console.WriteLine(messages[0].Content[0].Text+"\n\n");
-            var textOnly = completion.Content?[0]?.Text;
-            Console.WriteLine(textOnly);
-
-            //Console.WriteLine(messageOutput);
-        }
-        else
-        {
-            Console.WriteLine("No response received.");
-        }
+        Console.WriteLine(completion.Content?[0]?.Text);
     }
     catch (Exception ex)
     {
