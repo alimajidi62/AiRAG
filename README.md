@@ -15,7 +15,7 @@ This repository demonstrates three different ways to connect to Azure AI service
 - **Python:** [`test.py`](test.py)  
   Uses the `openai` and `azure.identity` libraries to connect to Azure OpenAI and Azure Cognitive Search. Reads configuration from [`Appkey.txt`](Appkey.txt) and demonstrates how to send a chat completion request with data augmentation from Azure Search.
 
-- **C#:** [`AiTest/Program.cs`](AiTest/Program.cs)  
+- **C#:** [`CSharp/Program.cs`](AiTest/Program.cs)  
   Uses Azure SDKs (`Azure.AI.OpenAI`, `Azure.Search.Documents`) to perform a search and send the results as context to the OpenAI model.
 
 - **C++:** [`Cpp/AiTest/AiTest.cpp`](Cpp/AiTest/AiTest.cpp)  
