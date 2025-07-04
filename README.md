@@ -26,7 +26,7 @@ This repository demonstrates three different ways to connect to Azure AI service
 ## ⚙️ How It Works
 
 1. **Read API Keys and Endpoints**  
-   All implementations read configuration from [`Appkey.txt`](Appkey.txt):
+   All implementations read configuration from [`Appkey.txt`](Appkey.txt):(please use your Api key)
    - Azure OpenAI endpoint and key
    - Azure Search endpoint and key
    - Index name
