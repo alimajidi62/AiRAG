@@ -18,6 +18,20 @@ This repository demonstrates three different ways to connect to Azure AI service
 - **C#:** [`CSharp/Program.cs`](CSharp/Program.cs)  
   Uses Azure SDKs (`Azure.AI.OpenAI`, `Azure.Search.Documents`) to perform a search and send the results as context to the OpenAI model.
 
+  **Required NuGet Packages:**
+  - `Azure.AI.OpenAI`
+  - `Azure.Search.Documents`
+  - `Azure.Core`
+  - `OpenAI` (for `OpenAI.Chat` if used)
+
+  You can install these packages using the NuGet Package Manager in Visual Studio or with the following commands in the Package Manager Console:
+
+  ```powershell
+  Install-Package Azure.AI.OpenAI
+  Install-Package Azure.Search.Documents
+  Install-Package Azure.Core
+  Install-Package OpenAI
+  ```
 - **C++:** [`Cpp/AiTest/AiTest.cpp`](Cpp/AiTest/AiTest.cpp)  
   Uses `libcurl` for HTTP requests and `nlohmann/json` for JSON handling. Reads keys from [`Appkey.txt`](Appkey.txt), queries Azure Cognitive Search, and sends the context to Azure OpenAI.
 
