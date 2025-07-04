@@ -21,6 +21,28 @@ This repository demonstrates three different ways to connect to Azure AI service
 - **C++:** [`Cpp/AiTest/AiTest.cpp`](Cpp/AiTest/AiTest.cpp)  
   Uses `libcurl` for HTTP requests and `nlohmann/json` for JSON handling. Reads keys from [`Appkey.txt`](Appkey.txt), queries Azure Cognitive Search, and sends the context to Azure OpenAI.
 
+  ### 🛠️ C++ Dependencies
+
+  This project uses [vcpkg](https://github.com/microsoft/vcpkg) to manage C++ dependencies.
+
+  **Install vcpkg:**
+  ```sh
+  git clone https://github.com/microsoft/vcpkg.git
+  cd vcpkg
+  .\bootstrap-vcpkg.bat   # On Windows PowerShell
+  ```
+
+  **Install dependencies:**
+  ```sh
+  .\vcpkg.exe install curl nlohmann-json
+  ```
+
+  **Integrate vcpkg with Visual Studio (optional but recommended):**
+  ```sh
+  .\vcpkg.exe integrate install
+  ```
+
+  After installing, open your Visual Studio solution and ensure it uses the vcpkg toolchain or the installed packages.
 ---
 
 ## ⚙️ How It Works
