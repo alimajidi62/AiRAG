@@ -52,7 +52,7 @@ std::string httpPost(const std::string& url, const std::string& apiKey, const js
 }
 
 int main() {
-    auto lines = readLines("C:\\Majidi\\Testcode\\Py\\AiRAG\\Appkey.txt");
+    auto lines = readLines("../../Appkey.txt");
     std::string openaiEndpoint = lines[0];
     std::string openaiKey = lines[1];
     std::string searchKey = lines[2];

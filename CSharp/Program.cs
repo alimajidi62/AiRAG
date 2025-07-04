@@ -9,7 +9,7 @@ using System.Text;
 /// which country were the winner of the world war 2?;
 async Task RunAsync()
 {
-    string[] lines = File.ReadAllLines(@"C:\Majidi\Testcode\Py\AiRAG\Appkey.txt");
+    string[] lines = File.ReadAllLines("../../../../Appkey.txt");
     string endpoint = lines[0].Trim();
     string apiKey = lines[1].Trim();
     string searchKey = lines[2].Trim();
