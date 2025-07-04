@@ -79,7 +79,62 @@ This file demonstrates how the Retrieval-Augmented Generation (RAG) approach can
 - **C++:** `libcurl`, `nlohmann/json`
 
 ---
+## 🆘 How to Set Up Azure AI and Azure Cognitive Search
 
+To use this repo, you need to create resources in your Azure portal and obtain the required API keys and endpoints.
+
+### 1. Create Azure OpenAI (AI Foundry) Resource
+
+- Go to the [Azure Portal](https://portal.azure.com/).
+- Search for **Azure OpenAI** and create a new resource.
+- After deployment, open your resource.
+- In the left menu, select **Keys and Endpoint**.
+  - **Endpoint:** Copy the endpoint URL.
+  - **Key:** Copy one of the API keys.
+
+### 2. Create Azure Cognitive Search Resource
+
+- In the Azure Portal, search for **Azure Cognitive Search** and create a new resource.
+- After deployment, open your search service.
+- In the left menu, select **Keys**.
+  - **Admin Key:** Copy one of the admin keys.
+- In the left menu, select **Overview**.
+  - **URL:** This is your search endpoint.
+
+### 3. Create and Index Your Data
+
+- In your Azure Cognitive Search resource, create an **Index** (e.g., `worldwar2-index`).
+- Upload your documents (such as `world_war2.txt`) using the Azure Portal, Azure SDK, or REST API.
+
+### 4. Fill in `Appkey.txt`
+
+Your `Appkey.txt` should look like this (one value per line):
+
+```
+<Azure OpenAI Endpoint>
+<Azure OpenAI API Key>
+<Azure Cognitive Search Admin Key>
+<Azure Cognitive Search Endpoint>
+<Azure Search Index Name>
+```
+
+Example:
+```
+https://YOUR_OPENAI_RESOURCE.openai.azure.com/
+YOUR_OPENAI_API_KEY
+YOUR_SEARCH_ADMIN_KEY
+https://YOUR_SEARCH_RESOURCE.search.windows.net/
+worldwar2-index
+```
+
+---
+
+**Tip:**  
+If you need more help, see the official documentation:  
+- [Azure OpenAI Service documentation](https://learn.microsoft.com/azure/ai-services/openai/)
+- [Azure Cognitive Search documentation](https://learn.microsoft.com/azure/search/)
+
+---
 ## ▶️ Usage
 
 1. Fill in [`Appkey.txt`](Appkey.txt) with your Azure endpoints and keys.
