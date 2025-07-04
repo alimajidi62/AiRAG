@@ -45,6 +45,11 @@ This repository demonstrates three different ways to connect to Azure AI service
   After installing, open your Visual Studio solution and ensure it uses the vcpkg toolchain or the installed packages.
 ---
 
+## 📄 About `world_war2.txt`
+
+The file [`world_war2.txt`](world_war2.txt) is an example document used for indexing in Azure Cognitive Search. It contains information and facts about World War II.  
+This file demonstrates how the Retrieval-Augmented Generation (RAG) approach can ground AI responses in specific, trusted content. You can replace or extend this file with your own documents to customize the knowledge base for your application.
+
 ## ⚙️ How It Works
 
 1. **Read API Keys and Endpoints**  
