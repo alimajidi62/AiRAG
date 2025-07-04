@@ -3,3 +3,7 @@ AiTest/.vs
 AiTest/obj
 AiTest/bin
 venv
+Cpp/AiTest/vcpkg
+Cpp/AiTest/x64
+Cpp/AiTest/.vs
+Cpp/AiTest/AiTest/x64
