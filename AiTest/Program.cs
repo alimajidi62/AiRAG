@@ -4,7 +4,9 @@ using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using OpenAI.Chat;
 using System.Text;
-
+/// some question for demo
+/// what is Case Blue in world war 2?;
+/// which country were the winner of the world war 2?;
 async Task RunAsync()
 {
     string[] lines = File.ReadAllLines(@"C:\Majidi\Testcode\Py\AiRAG\Appkey.txt");
