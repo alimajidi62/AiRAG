@@ -15,7 +15,7 @@ This repository demonstrates three different ways to connect to Azure AI service
 - **Python:** [`test.py`](test.py)  
   Uses the `openai` and `azure.identity` libraries to connect to Azure OpenAI and Azure Cognitive Search. Reads configuration from [`Appkey.txt`](Appkey.txt) and demonstrates how to send a chat completion request with data augmentation from Azure Search.
 
-- **C#:** [`CSharp/Program.cs`](AiTest/Program.cs)  
+- **C#:** [`CSharp/Program.cs`](CSharp/Program.cs)  
   Uses Azure SDKs (`Azure.AI.OpenAI`, `Azure.Search.Documents`) to perform a search and send the results as context to the OpenAI model.
 
 - **C++:** [`Cpp/AiTest/AiTest.cpp`](Cpp/AiTest/AiTest.cpp)  
@@ -75,7 +75,7 @@ This file demonstrates how the Retrieval-Augmented Generation (RAG) approach can
 - Azure Cognitive Search resource with an indexed document (e.g., [`world_war2.txt`](world_war2.txt))
 - API keys and endpoints in [`Appkey.txt`](Appkey.txt)
 - **Python:** `openai`, `azure-identity`
-- **C#:** Azure SDK packages (see [`AiTest.csproj`](AiTest/AiTest.csproj))
+- **C#:** Azure SDK packages (see [`AiTest.csproj`](CSharp/AiTest.csproj))
 - **C++:** `libcurl`, `nlohmann/json`
 
 ---
@@ -144,7 +144,7 @@ If you need more help, see the official documentation:
      python test.py
      ```
    - **C#:**  
-     Open [`AiTest.sln`](AiTest/AiTest.sln) in Visual Studio and run.
+     Open [`AiTest.sln`](CSharp/AiTest.sln) in Visual Studio and run.
    - **C++:**  
      Open [`Cpp/AiTest/AiTest.sln`](Cpp/AiTest/AiTest.sln) in Visual Studio and run.
 
