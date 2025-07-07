@@ -163,7 +163,47 @@ If you need more help, see the official documentation:
      Open [`Cpp/AiTest/AiTest.sln`](Cpp/AiTest/AiTest.sln) in Visual Studio and run.
 
 ---
+---
 
+## 📑 Using Azure AI Document Intelligence (Form Recognizer)
+
+You can also use [Azure AI Document Intelligence (formerly Form Recognizer)](https://learn.microsoft.com/azure/ai-services/document-intelligence/) to extract structured data from documents (PDFs, images, etc.) before indexing them in Azure Cognitive Search.
+
+### How to Use Document Intelligence with This Repo
+
+1. **Create a Document Intelligence Resource**
+   - Go to the [Azure Portal](https://portal.azure.com/).
+   - Search for **Azure AI Document Intelligence** (or **Form Recognizer**) and create a new resource.
+   - After deployment, open your resource and find the **Endpoint** and **Key** under the "Keys and Endpoint" section.
+
+2. **Extract Data from Documents**
+   - Use the [Azure.AI.FormRecognizer](https://learn.microsoft.com/dotnet/api/overview/azure/ai.formrecognizer-readme) SDK (C#) or [azure-ai-formrecognizer](https://pypi.org/project/azure-ai-formrecognizer/) (Python) to extract text and fields from your documents.
+   - Example (Python):
+     ```python
+     from azure.ai.formrecognizer import DocumentAnalysisClient
+     from azure.core.credentials import AzureKeyCredential
+
+     endpoint = "<your-form-recognizer-endpoint>"
+     key = "<your-form-recognizer-key>"
+     document_path = "path/to/your/document.pdf"
+
+     client = DocumentAnalysisClient(endpoint, AzureKeyCredential(key))
+     with open(document_path, "rb") as f:
+         poller = client.begin_analyze_document("prebuilt-document", document=f)
+         result = poller.result()
+         for page in result.pages:
+             print("Page content:", page.content)
+     ```
+   - You can extract the content and save it as text or JSON for indexing.
+
+3. **Index Extracted Data in Azure Cognitive Search**
+   - After extracting the content, upload it to your Azure Cognitive Search index (as shown in the setup steps above).
+   - This allows you to search and ground your AI responses in the content of scanned documents, PDFs, and more.
+
+**Tip:**  
+Document Intelligence is especially useful for digitizing and searching large collections of scanned files, forms, or complex documents.
+
+---
 ## ⚠️ Notes
 
 - This repo is for demonstration purposes and does not include production-level error handling or security.
