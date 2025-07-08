@@ -39,30 +39,13 @@ async Task RunAsync()
                 var operation = await docClient.AnalyzeDocumentFromUriAsync(WaitUntil.Completed, "prebuilt-document", new Uri(blobPdfUrl));
                 var result = operation.Value;
 
+                // Extract all text from the PDF
                 var allText = new StringBuilder();
-
                 allText.AppendLine(result.Content);
-
                 string extractedText = allText.ToString();
 
                 // Create or update the Azure Cognitive Search index if needed
                 var indexClient = new SearchIndexClient(new Uri(searchEndpoint), new AzureKeyCredential(searchKey));
-                if (!indexClient.GetIndexNames().Contains(indexName))
-                {
-                    var definition = new SearchIndex(indexName)
-                    {
-                        Fields =
-                        {
-                            new SimpleField("id", SearchFieldDataType.String) { IsKey = true },
-                            new SearchableField("content") { IsSortable = false, IsFilterable = false }
-                        }
-                    };
-                    indexClient.CreateOrUpdateIndex(definition);
-                }
-
-                // Upload the extracted text to Azure Cognitive Search
-                var searchClientForUpload = new SearchClient(new Uri(searchEndpoint), indexName, new AzureKeyCredential(searchKey));
-                var doc = new { id = Guid.NewGuid().ToString(), content = extractedText };
                 if (!indexClient.GetIndexNames().Contains(indexName))
                 {
                     var definition = new SearchIndex(indexName)
@@ -74,6 +57,19 @@ async Task RunAsync()
                         }
                     };
                     indexClient.CreateOrUpdateIndex(definition);
+                }
+
+                // Upload the extracted text to Azure Cognitive Search
+                var searchClientForUpload = new SearchClient(new Uri(searchEndpoint), indexName, new AzureKeyCredential(searchKey));
+                var doc = new { id = Guid.NewGuid().ToString(), content = extractedText };
+                try
+                {
+                    var uploadResult = await searchClientForUpload.UploadDocumentsAsync(new[] { doc });
+                    Console.WriteLine("Upload status: " + uploadResult.Value.Results.FirstOrDefault()?.Status);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Upload error: " + ex.Message);
                 }
 
                 Console.WriteLine("PDF content extracted and indexed successfully.");
