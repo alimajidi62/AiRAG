@@ -199,7 +199,57 @@ You can also use [Azure AI Document Intelligence (formerly Form Recognizer)](htt
 3. **Index Extracted Data in Azure Cognitive Search**
    - After extracting the content, upload it to your Azure Cognitive Search index (as shown in the setup steps above).
    - This allows you to search and ground your AI responses in the content of scanned documents, PDFs, and more.
+---
 
+## 📚 Understanding the Azure Cognitive Search Index
+
+An **index** in Azure Cognitive Search is similar to a database table: it defines the structure of your searchable data and stores the documents you want to search over. Each document in the index is like a row in a table, and each field is like a column.
+
+### Why is the Index Important?
+
+- The index determines what data you can search and retrieve.
+- You must define the fields (such as `id` and `content`) before uploading documents.
+- The `id` field is required and must be unique for each document. It acts as the primary key.
+
+### How This Repo Uses the Index
+
+- The repo expects an index with at least these fields:
+  - `id` (string, key): A unique identifier for each document.
+  - `content` (string): The full text extracted from your source (e.g., PDF, text file).
+- When you upload data (from a PDF or text file), it is stored in the `content` field of the index.
+- When you ask a question, the code searches the `content` field for relevant information.
+
+### How to Create or Update the Index
+
+- The code in this repo will automatically create the index if it does not exist, using the correct schema.
+- If you want to create or manage the index manually:
+  1. Go to your Azure Portal → Cognitive Search → Indexes.
+  2. Click **+ Add Index**.
+  3. Add a field named `id` (type: String, Key: Yes).
+  4. Add a field named `content` (type: String, Searchable: Yes).
+  5. Save the index.
+
+**Note:**  
+If you change the fields in your index, you may need to delete and recreate the index for the changes to take effect.
+
+### Example Index Definition (C#)
+
+```csharp
+var definition = new SearchIndex(indexName)
+{
+    Fields =
+    {
+        new SimpleField("id", SearchFieldDataType.String) { IsKey = true, IsFilterable = true },
+        new SearchableField("content") { IsSortable = false, IsFilterable = false }
+    }
+};
+indexClient.CreateOrUpdateIndex(definition);
+```
+
+---
+
+**In summary:**  
+The index is the core of your search experience. Make sure it has the right fields, and always include an `id` when uploading documents. All search and retrieval in this repo is performed against the `content` field of your index.
 **Tip:**  
 Document Intelligence is especially useful for digitizing and searching large collections of scanned files, forms, or complex documents.
 
