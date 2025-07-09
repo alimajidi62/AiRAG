@@ -260,7 +260,36 @@ Document Intelligence is especially useful for digitizing and searching large co
 
 - This repo is for demonstration purposes and does not include production-level error handling or security.
 - Make sure your Azure Search index contains the documents you want to query.
-![image](https://github.com/user-attachments/assets/1e9ae0b7-279a-48ce-8788-4513bf011d4d)
+<!-- Add this section before the final --- at the end of your README.md -->
+
+---
+
+## 📊 Example: Estimation of Jewish Losses in World War II by Country
+
+When you ask a question such as:
+
+> "What are the estimated Jewish losses in World War II based on country?"
+
+The system retrieves relevant information from your indexed documents and provides a grounded answer. For example, the response may include a table or summary like:
+
+| Country         | Estimated Jewish Losses |
+|-----------------|------------------------|
+| Poland          | ~3,000,000             |
+| Soviet Union    | ~1,000,000             |
+| Hungary         | ~569,000               |
+| Romania         | ~287,000               |
+| Germany         | ~165,000               |
+| Czechoslovakia  | ~277,000               |
+| Lithuania       | ~143,000               |
+| Netherlands     | ~102,000               |
+| France          | ~77,000                |
+| Other countries | (various)              |
+
+*These numbers are based on historical estimates and may vary by source.*
+
+This demonstrates how Retrieval-Augmented Generation (RAG) can provide detailed, document-grounded answers to complex historical questions using Azure Cognitive Search and Azure OpenAI.
+
+---
 ![image](https://github.com/user-attachments/assets/71a40c1b-4dab-4008-8c06-165a1b68513e)
 
 
