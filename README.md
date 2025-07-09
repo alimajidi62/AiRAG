@@ -289,9 +289,3 @@ The system retrieves relevant information from your indexed documents and provid
 
 This demonstrates how Retrieval-Augmented Generation (RAG) can provide detailed, document-grounded answers to complex historical questions using Azure Cognitive Search and Azure OpenAI.
 
----
-![image](https://github.com/user-attachments/assets/354294f1-627d-4045-b4e3-0c38b345b09d)
-
-
-
----
