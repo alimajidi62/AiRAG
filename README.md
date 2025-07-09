@@ -255,10 +255,13 @@ Document Intelligence is especially useful for digitizing and searching large co
 
 ---
 ## ⚠️ Notes
-![image](https://github.com/user-attachments/assets/1e9ae0b7-279a-48ce-8788-4513bf011d4d)
+
 
 
 - This repo is for demonstration purposes and does not include production-level error handling or security.
 - Make sure your Azure Search index contains the documents you want to query.
+![image](https://github.com/user-attachments/assets/1e9ae0b7-279a-48ce-8788-4513bf011d4d)
+![image](https://github.com/user-attachments/assets/71a40c1b-4dab-4008-8c06-165a1b68513e)
+
 
 ---
