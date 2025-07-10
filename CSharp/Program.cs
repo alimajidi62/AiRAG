@@ -112,7 +112,7 @@ async Task RunAsync()
         // Step 3: Use Azure OpenAI with context
         var messages = new List<ChatMessage>
         {
-            new SystemChatMessage("You are a helpful assistant. Use just the provided context to answer the question. Please do not use other data you might have."),
+            new SystemChatMessage("You are a helpful assistant. Use just the provided context to answer the question. Please do not use other data you might have just use the information that are in the prompt"),
             new UserChatMessage($"Context:\n{context}\n\nQuestion: {userQuestion}")
         };
 
