@@ -8,10 +8,6 @@ using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 
-/// some question for demo
-/// what is Case Blue in world war 2?;
-/// which country were the winner of the world war 2?;
-
 async Task RunAsync()
 {
     // Read all keys and endpoints from Appkey.txt
