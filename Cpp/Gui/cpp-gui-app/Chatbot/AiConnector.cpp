@@ -1,4 +1,6 @@
 #include "AiConnector.h"
+#include <QCoreApplication>
+#include <QDir>
 #include <fstream>
 #include <sstream>
 #include <vector>
@@ -52,8 +54,9 @@ std::string httpPost(const std::string& url, const std::string& apiKey, const js
 AiConnector::AiConnector(QObject* parent) : QObject(parent) {}
 
 void AiConnector::askQuestion(const QString& question) {
+    QString ddd=QCoreApplication::applicationDirPath();
     // Read keys and endpoints
-    auto lines = readLines("../../Appkey.txt");
+    auto lines = readLines("../../../../../../Appkey.txt");
     if (lines.size() < 5) {
         setAnswer("Error: Appkey.txt is missing or incomplete.");
         return;

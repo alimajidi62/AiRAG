@@ -4,39 +4,71 @@ import Chatbot 1.0
 
 ApplicationWindow {
     visible: true
-    width: 400
-    height: 300
+    width: 800
+    height: 500
     title: "Azure AI Chatbot"
 
     AiConnector {
         id: ai
     }
 
-    Column {
-        anchors.centerIn: parent
-        spacing: 10
+    Rectangle {
+        anchors.fill: parent
+        color: "#f5f5f5"
 
-        TextField {
-            id: questionField
-            width: parent.width * 0.8
-            placeholderText: "Type your question..."
-            onAccepted: askButton.clicked()
-        }
+        Column {
+            anchors.centerIn: parent
+            spacing: 20
+            width: Math.min(parent.width * 0.8, 600)
 
-        Button {
-            id: askButton
-            text: "Ask"
-            onClicked: {
-                ai.askQuestion(questionField.text)
+            Text {
+                text: "Ask Azure AI"
+                font.pixelSize: 28
+                font.bold: true
+                anchors.horizontalCenter: parent.horizontalCenter
             }
-        }
 
-        TextArea {
-            width: parent.width * 0.8
-            height: 120
-            readOnly: true
-            text: ai.answer
-            wrapMode: TextArea.Wrap
+            TextField {
+                id: questionField
+                width: parent.width
+                placeholderText: "Type your question..."
+                font.pixelSize: 18
+                padding: 10
+                onAccepted: askButton.clicked()
+            }
+
+            Button {
+                id: askButton
+                text: "Ask"
+                width: parent.width
+                font.pixelSize: 18
+                onClicked: ai.askQuestion(questionField.text)
+            }
+
+            ScrollView {
+                width: parent.width
+                height: 220
+                clip: true
+
+                Rectangle {
+                    width: parent.width
+                    color: "#ffffff"
+                    radius: 8
+                    border.color: "#cccccc"
+                    // Let the rectangle grow with the text, but not less than the ScrollView height
+                    height: Math.max(answerText.implicitHeight + 20, parent.height)
+                    clip: true
+
+                    Text {
+                        id: answerText
+                        text: ai.answer
+                        wrapMode: Text.Wrap
+                        anchors.margins: 10
+                        anchors.fill: parent
+                        font.pixelSize: 16
+                    }
+                }
+            }
         }
     }
 }
