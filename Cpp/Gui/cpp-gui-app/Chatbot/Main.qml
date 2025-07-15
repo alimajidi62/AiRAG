@@ -5,7 +5,7 @@ import Chatbot 1.0
 ApplicationWindow {
     visible: true
     width: 800
-    height: 500
+    height: 960
     title: "Azure AI Chatbot"
 
     AiConnector {
@@ -22,7 +22,7 @@ ApplicationWindow {
             width: Math.min(parent.width * 0.8, 600)
 
             Text {
-                text: "Ask Azure AI"
+                text: "Ask question about the Help"
                 font.pixelSize: 28
                 font.bold: true
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -39,7 +39,7 @@ ApplicationWindow {
 
             Button {
                 id: askButton
-                text: "Ask"
+                text: "Press Enter"
                 width: parent.width
                 font.pixelSize: 18
                 onClicked: ai.askQuestion(questionField.text)
@@ -47,7 +47,7 @@ ApplicationWindow {
 
             ScrollView {
                 width: parent.width
-                height: 220
+                height: 820
                 clip: true
 
                 Rectangle {
