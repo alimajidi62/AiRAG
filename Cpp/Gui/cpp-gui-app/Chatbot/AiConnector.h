@@ -1,0 +1,24 @@
+#ifndef AICONNECTOR_H
+#define AICONNECTOR_H
+#include <QObject>
+#include <QString>
+
+class AiConnector : public QObject {
+    Q_OBJECT
+    Q_PROPERTY(QString answer READ answer NOTIFY answerChanged)
+public:
+    explicit AiConnector(QObject* parent = nullptr);
+
+    Q_INVOKABLE void askQuestion(const QString& question);
+
+    QString answer() const { return m_answer; }
+
+signals:
+    void answerChanged();
+
+private:
+    QString m_answer;
+    void setAnswer(const QString& ans);
+};
+
+#endif // AICONNECTOR_H
