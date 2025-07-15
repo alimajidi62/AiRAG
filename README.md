@@ -289,4 +289,38 @@ The system retrieves relevant information from your indexed documents and provid
 
 This demonstrates how Retrieval-Augmented Generation (RAG) can provide detailed, document-grounded answers to complex historical questions using Azure Cognitive Search and Azure OpenAI.
 
-I will use the multi agent Ai for improve the reasding the documetion.
+---
+
+## 🖥️ Qt UI: Ask Questions with a Graphical Interface
+
+This repository also includes a **Qt Quick (QML) graphical user interface** for interacting with Azure AI and Cognitive Search, similar in functionality to the C++ console project.
+
+### Features
+
+- **Modern Chatbot UI:**  
+  The Qt app provides a clean, user-friendly interface for asking questions and viewing AI-generated answers.
+- **Azure Integration:**  
+  Connects to Azure OpenAI and Azure Cognitive Search using the same API keys and endpoints as the other implementations.
+- **Real-Time Responses:**  
+  Enter your question and receive answers grounded in your indexed documents.
+
+### How to Run the Qt UI
+
+1. **Configure API Keys:**  
+   Ensure your [`Appkey.txt`](Appkey.txt) file is filled out as described above.
+2. **Open the Project:**  
+   Open the Qt project (e.g., `Cpp/Gui/cpp-gui-app/Chatbot/`) in [Qt Creator](https://www.qt.io/product/development-tools) or Visual Studio with Qt plugin.
+3. **Build and Run:**  
+   Build and launch the application.  
+   You’ll see a window titled **"Azure AI Chatbot"** where you can type your question and view the AI’s answer.
+
+### Example Screenshot
+
+![Qt Chatbot UI Example](docs/qt_chatbot_example.png) <!-- Add a screenshot if available -->
+
+### File Locations
+
+- **QML UI:** [`Cpp/Gui/cpp-gui-app/Chatbot/Main.qml`](Cpp/Gui/cpp-gui-app/Chatbot/Main.qml)
+- **Backend Integration:** C++/QML bridge code connects the UI to Azure services.
+
+---
