@@ -16,15 +16,13 @@ set(CMAKE_AUTOUIC ON)
 find_package(Qt6 6.5 REQUIRED COMPONENTS Quick)
 
 # Find external dependencies (vcpkg will provide these if toolchain is set)
-set(CURL_INCLUDE_DIR "C:/Majidi/Testcode/Py/AiRAG/Cpp/AiTest/vcpkg/packages/curl_x64-windows/include")
-set(CURL_LIBRARY "C:/Majidi/Testcode/Py/AiRAG/Cpp/AiTest/vcpkg/packages/curl_x64-windows/lib/libcurl.lib")
+set(CURL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../../../AiTest/vcpkg/packages/curl_x64-windows/include")
+set(CURL_LIBRARY "${CMAKE_SOURCE_DIR}/../../../AiTest/vcpkg/packages/curl_x64-windows/lib/libcurl.lib")
 include_directories(${CURL_INCLUDE_DIR})
 link_libraries(${CURL_LIBRARY})
 
-# Manually specify nlohmann_json
-set(NLOHMANN_JSON_INCLUDE_DIR "C:/Majidi/Testcode/Py/AiRAG/Cpp/AiTest/vcpkg/packages/nlohmann-json_x64-windows/include")
+set(NLOHMANN_JSON_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../../../AiTest/vcpkg/packages/nlohmann-json_x64-windows/include")
 include_directories(${NLOHMANN_JSON_INCLUDE_DIR})
-
 
 qt_standard_project_setup(REQUIRES 6.5)
 
