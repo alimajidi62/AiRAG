@@ -55,10 +55,9 @@ ApplicationWindow {
                     color: "#ffffff"
                     radius: 8
                     border.color: "#cccccc"
-                    // Let the rectangle grow with the text, but not less than the ScrollView height
-                    height: Math.max(answerText.implicitHeight + 20, parent.height)
+                    // Let the rectangle grow with the text
+                    height: answerText.implicitHeight + 20
                     clip: true
-
                     Text {
                         id: answerText
                         text: ai.answer
