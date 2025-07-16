@@ -7,6 +7,12 @@ int main(int argc, char *argv[])
     QQuickStyle::setStyle("Fusion");  // or "Material", "Basic", etc.
     QGuiApplication app(argc, argv);
     qmlRegisterType<AiConnector>("Chatbot", 1, 0, "AiConnector");
+
+
+    QCoreApplication::setOrganizationName("MyCompany");
+    QCoreApplication::setOrganizationDomain("mycompany.com");
+    QCoreApplication::setApplicationName("ChatbotApp");
+
     QQmlApplicationEngine engine;
     QObject::connect(
         &engine,

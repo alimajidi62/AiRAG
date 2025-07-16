@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import Qt.labs.settings 1.0
 import Chatbot 1.0
 
 ApplicationWindow {
@@ -8,21 +9,40 @@ ApplicationWindow {
     width: 1000
     height: 960
     title: "Azure AI Chatbot"
-    color: "#eaeef3"
+    color: "#f0f4f8"
+
+    Settings {
+        id: settings
+        property string savedHistoryJson: "[]"
+    }
 
     AiConnector {
         id: ai
         onAnswerChanged: {
-            historyModel.append({
+            let newEntry = {
                 question: questionField.text,
                 answer: ai.answer
-            })
+            }
+            historyModel.append(newEntry)
             answerText.text = ai.answer
+
+            let historyArray = []
+            for (let i = 0; i < historyModel.count; i++) {
+                historyArray.push(historyModel.get(i))
+            }
+            settings.savedHistoryJson = JSON.stringify(historyArray)
         }
     }
 
     ListModel {
         id: historyModel
+    }
+
+    Component.onCompleted: {
+        let saved = JSON.parse(settings.savedHistoryJson)
+        for (let i = 0; i < saved.length; i++) {
+            historyModel.append(saved[i])
+        }
     }
 
     property bool showHistory: true
@@ -31,16 +51,17 @@ ApplicationWindow {
         anchors.fill: parent
         spacing: 0
 
-        // Left Panel: Expandable History
+        // Left Panel: History
         Rectangle {
-            width: showHistory ? 280 : 50
-            color: "#eeeefe"
+            width: showHistory ? 260 : 50
+            color: "#e3eaf0"
             Layout.fillHeight: true
-            border.color: "#5a555f"
+            border.color: "#c0cbd4"
+            radius: 8
 
             ColumnLayout {
                 anchors.fill: parent
-                spacing: 5
+                spacing: 10
                 //padding: 10
 
                 Button {
@@ -51,6 +72,26 @@ ApplicationWindow {
                         radius: 6
                     }
                     onClicked: showHistory = !showHistory
+                    background: Rectangle {
+                        color: "#d0dce7"
+                        radius: 6
+                    }
+                }
+
+                Button {
+                    text: "🗑 Clear History"
+                    visible: showHistory
+                    Layout.alignment: Qt.AlignCenter
+                    onClicked: {
+                        historyModel.clear()
+                        settings.savedHistoryJson = "[]"
+                        answerText.text = ""
+                        questionField.text = ""
+                    }
+                    background: Rectangle {
+                        color: "#ffdddd"
+                        radius: 6
+                    }
                 }
 
                 ListView {
@@ -59,7 +100,7 @@ ApplicationWindow {
                     Layout.fillHeight: true
                     model: historyModel
                     clip: true
-                    spacing: 5
+                    spacing: 6
 
                     delegate: Button {
                         width: parent.width
@@ -73,6 +114,11 @@ ApplicationWindow {
                             questionField.text = model.question
                             answerText.text = model.answer
                         }
+                        background: Rectangle {
+                            color: "#ffffff"
+                            border.color: "#c0cbd4"
+                            radius: 6
+                        }
                     }
                 }
             }
@@ -82,16 +128,17 @@ ApplicationWindow {
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            color: "#f9f9fb"
+            color: "#ffffff"
+            radius: 8
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: 30
+                anchors.margins: 24
                 spacing: 20
 
                 Text {
-                    text: "💬 Azure AI Chatbot"
-                    font.pixelSize: 32
+                    text: "💬 Ask a question"
+                    font.pixelSize: 28
                     font.bold: true
                     color: "#2c3e50"
                 }
@@ -101,11 +148,11 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     placeholderText: "Type your question..."
                     font.pixelSize: 18
-                    padding: 10
+                    padding: 12
                     background: Rectangle {
-                        color: "#ffffff"
+                        color: "#f0f4f8"
                         radius: 8
-                        border.color: "#cccccc"
+                        border.color: "#c0cbd4"
                     }
                     onAccepted: askButton.clicked()
                 }
@@ -116,11 +163,11 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     font.pixelSize: 18
                     background: Rectangle {
-                        color: "#3498db"
+                        color: "#0078d4"
                         radius: 8
                     }
                     contentItem: Text {
-                        text: qsTr("Ask")
+                        text: askButton.text
                         color: "white"
                         font.pixelSize: 18
                         anchors.centerIn: parent
@@ -131,16 +178,17 @@ ApplicationWindow {
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 300
-                    radius: 10
-                    color: "#ffffff"
-                    border.color: "#d0d0d0"
+                    clip: true
+                    contentWidth: parent.width
+                    contentHeight: answerText.paintedHeight + 40
+                    flickableDirection: Flickable.VerticalFlick
 
-                    Flickable {
-                        anchors.fill: parent
-                        contentWidth: parent.width
-                        contentHeight: answerText.paintedHeight + 40
-                        clip: true
-                        flickableDirection: Flickable.VerticalFlick
+                    Rectangle {
+                        width: parent.width
+                        height: answerText.paintedHeight + 40
+                        color: "#ffffff"
+                        radius: 8
+                        border.color: "#cccccc"
 
                         Text {
                             id: answerText
@@ -149,7 +197,7 @@ ApplicationWindow {
                             width: parent.width - 40
                             anchors.centerIn: parent
                             font.pixelSize: 16
-                            color: "#2c3e50"
+                            color: "#333"
                         }
                     }
                 }
