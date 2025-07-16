@@ -19,13 +19,12 @@ ApplicationWindow {
         Column {
             anchors.centerIn: parent
             spacing: 20
-            width: Math.min(parent.width * 0.8, 600)
+            width: parent.width * 0.99
 
             Text {
                 text: "Ask question about the Help"
                 font.pixelSize: 28
                 font.bold: true
-                anchors.horizontalCenter: parent.horizontalCenter
             }
 
             TextField {
@@ -45,25 +44,27 @@ ApplicationWindow {
                 onClicked: ai.askQuestion(questionField.text)
             }
 
-            ScrollView {
+            Flickable {
                 width: parent.width
                 height: 820
                 clip: true
+                contentWidth: parent.width
+                contentHeight: answerText.paintedHeight + 40
+                flickableDirection: Flickable.VerticalFlick
 
                 Rectangle {
                     width: parent.width
+                    height: answerText.paintedHeight + 40
                     color: "#ffffff"
                     radius: 8
                     border.color: "#cccccc"
-                    // Let the rectangle grow with the text
-                    height: answerText.implicitHeight + 20
-                    clip: true
+
                     Text {
                         id: answerText
                         text: ai.answer
                         wrapMode: Text.Wrap
-                        anchors.margins: 10
-                        anchors.fill: parent
+                        width: parent.width - 40
+                        anchors.centerIn: parent
                         font.pixelSize: 16
                     }
                 }

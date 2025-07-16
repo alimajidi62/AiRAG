@@ -12,3 +12,4 @@ CSharp/bin
 CSharp/obj
 Cpp/Gui/cpp-gui-app/Chatbot/build
 .vscode
+Cpp/Gui/cpp-gui-app/Chatbot/CMakeLists.txt.user
