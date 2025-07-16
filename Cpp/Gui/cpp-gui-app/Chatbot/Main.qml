@@ -33,9 +33,9 @@ ApplicationWindow {
         // Left Panel: Expandable History
         Rectangle {
             width: showHistory ? 280 : 50
-            color: "#2c3e50"
+            color: "#eeeefe"
             Layout.fillHeight: true
-            border.color: "#1a252f"
+            border.color: "#5a555f"
 
             ColumnLayout {
                 anchors.fill: parent
@@ -65,7 +65,7 @@ ApplicationWindow {
                         text: model.question
                         font.pixelSize: 14
                         background: Rectangle {
-                            color: "#3b4b5a"
+                            color: "#dddddd"
                             radius: 6
                         }
                         onClicked: {

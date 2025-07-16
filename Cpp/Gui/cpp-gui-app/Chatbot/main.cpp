@@ -1,8 +1,10 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include "AiConnector.h"
+#include <QQuickStyle>
 int main(int argc, char *argv[])
 {
+    QQuickStyle::setStyle("Fusion");  // or "Material", "Basic", etc.
     QGuiApplication app(argc, argv);
     qmlRegisterType<AiConnector>("Chatbot", 1, 0, "AiConnector");
     QQmlApplicationEngine engine;
