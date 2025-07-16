@@ -30,38 +30,38 @@ ApplicationWindow {
         spacing: 0
 
         // Left Panel: Expandable History
-        ColumnLayout {
+        Rectangle {
             width: showHistory ? 250 : 40
-            height: parent.height
-            spacing: 10
-            Rectangle {
-                width: parent.width
-                height: 40
-                color: "#dddddd"
-                border.color: "#bbbbbb"
+            color: "#eeeeee"
+            Layout.fillHeight: true
+            border.color: "#cccccc"
 
-                Button {
-                    anchors.centerIn: parent
-                    text: showHistory ? "<" : ">"
-                    onClicked: showHistory = !showHistory
-                }
-            }
-
-            ListView {
-                visible: showHistory
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                model: historyModel
-                clip: true
+            ColumnLayout {
+                anchors.fill: parent
                 spacing: 5
 
-                delegate: Button {
-                    width: parent.width
-                    text: model.question
-                    font.pixelSize: 14
-                    onClicked: {
-                        questionField.text = model.question
-                        answerText.text = model.answer
+                Button {
+                    text: showHistory ? "<" : ">"
+                    Layout.alignment: Qt.AlignLeft
+                    onClicked: showHistory = !showHistory
+                }
+
+                ListView {
+                    visible: showHistory
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    model: historyModel
+                    clip: true
+                    spacing: 5
+
+                    delegate: Button {
+                        width: parent.width
+                        text: model.question
+                        font.pixelSize: 14
+                        onClicked: {
+                            questionField.text = model.question
+                            answerText.text = model.answer
+                        }
                     }
                 }
             }
@@ -73,10 +73,10 @@ ApplicationWindow {
             Layout.fillHeight: true
             color: "#f5f5f5"
 
-            Column {
-                anchors.centerIn: parent
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 20
                 spacing: 20
-                width: parent.width * 0.95
 
                 Text {
                     text: "Ask question about the Help"
@@ -86,7 +86,7 @@ ApplicationWindow {
 
                 TextField {
                     id: questionField
-                    width: parent.width
+                    Layout.fillWidth: true
                     placeholderText: "Type your question..."
                     font.pixelSize: 18
                     padding: 10
@@ -96,14 +96,14 @@ ApplicationWindow {
                 Button {
                     id: askButton
                     text: "Press Enter"
-                    width: parent.width
+                    Layout.fillWidth: true
                     font.pixelSize: 18
                     onClicked: ai.askQuestion(questionField.text)
                 }
 
                 Flickable {
-                    width: parent.width
-                    height: 300
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 300
                     clip: true
                     contentWidth: parent.width
                     contentHeight: answerText.paintedHeight + 40
