@@ -1,10 +1,11 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 import Chatbot 1.0
 
 ApplicationWindow {
     visible: true
-    width: 800
+    width: 1000
     height: 960
     title: "Azure AI Chatbot"
 
@@ -22,84 +23,107 @@ ApplicationWindow {
         id: historyModel
     }
 
-    Rectangle {
+    property bool showHistory: true
+
+    RowLayout {
         anchors.fill: parent
-        color: "#f5f5f5"
+        spacing: 0
 
-        Column {
-            anchors.centerIn: parent
-            spacing: 20
-            width: parent.width * 0.95
-
-            Text {
-                text: "Ask question about the Help"
-                font.pixelSize: 28
-                font.bold: true
-            }
-
-            TextField {
-                id: questionField
+        // Left Panel: Expandable History
+        ColumnLayout {
+            width: showHistory ? 250 : 40
+            height: parent.height
+            spacing: 10
+            Rectangle {
                 width: parent.width
-                placeholderText: "Type your question..."
-                font.pixelSize: 18
-                padding: 10
-                onAccepted: askButton.clicked()
-            }
+                height: 40
+                color: "#dddddd"
+                border.color: "#bbbbbb"
 
-            Button {
-                id: askButton
-                text: "Press Enter"
-                width: parent.width
-                font.pixelSize: 18
-                onClicked: ai.askQuestion(questionField.text)
-            }
-
-            Flickable {
-                width: parent.width
-                height: 300
-                clip: true
-                contentWidth: parent.width
-                contentHeight: answerText.paintedHeight + 40
-                flickableDirection: Flickable.VerticalFlick
-                Rectangle {
-                    width: parent.width
-                    height: answerText.paintedHeight + 40
-                    color: "#ffffff"
-                    radius: 8
-                    border.color: "#cccccc"
-
-                    Text {
-                        id: answerText
-                        text: ai.answer
-                        wrapMode: Text.Wrap
-                        width: parent.width - 40
-                        anchors.centerIn: parent
-                        font.pixelSize: 16
-                    }
+                Button {
+                    anchors.centerIn: parent
+                    text: showHistory ? "<" : ">"
+                    onClicked: showHistory = !showHistory
                 }
             }
 
-            Text {
-                text: "Previous Questions"
-                font.pixelSize: 20
-                font.bold: true
-                padding: 10
-            }
-
             ListView {
-                width: parent.width
-                height: 200
+                visible: showHistory
+                Layout.fillWidth: true
+                Layout.fillHeight: true
                 model: historyModel
                 clip: true
-                spacing: 10
+                spacing: 5
 
                 delegate: Button {
                     width: parent.width
                     text: model.question
-                    font.pixelSize: 16
+                    font.pixelSize: 14
                     onClicked: {
                         questionField.text = model.question
                         answerText.text = model.answer
+                    }
+                }
+            }
+        }
+
+        // Right Panel: Chat UI
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            color: "#f5f5f5"
+
+            Column {
+                anchors.centerIn: parent
+                spacing: 20
+                width: parent.width * 0.95
+
+                Text {
+                    text: "Ask question about the Help"
+                    font.pixelSize: 28
+                    font.bold: true
+                }
+
+                TextField {
+                    id: questionField
+                    width: parent.width
+                    placeholderText: "Type your question..."
+                    font.pixelSize: 18
+                    padding: 10
+                    onAccepted: askButton.clicked()
+                }
+
+                Button {
+                    id: askButton
+                    text: "Press Enter"
+                    width: parent.width
+                    font.pixelSize: 18
+                    onClicked: ai.askQuestion(questionField.text)
+                }
+
+                Flickable {
+                    width: parent.width
+                    height: 300
+                    clip: true
+                    contentWidth: parent.width
+                    contentHeight: answerText.paintedHeight + 40
+                    flickableDirection: Flickable.VerticalFlick
+
+                    Rectangle {
+                        width: parent.width
+                        height: answerText.paintedHeight + 40
+                        color: "#ffffff"
+                        radius: 8
+                        border.color: "#cccccc"
+
+                        Text {
+                            id: answerText
+                            text: ai.answer
+                            wrapMode: Text.Wrap
+                            width: parent.width - 40
+                            anchors.centerIn: parent
+                            font.pixelSize: 16
+                        }
                     }
                 }
             }
