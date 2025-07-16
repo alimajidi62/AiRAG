@@ -17,6 +17,7 @@ ApplicationWindow {
                 question: questionField.text,
                 answer: ai.answer
             })
+            answerText.text = ai.answer
         }
     }
 
