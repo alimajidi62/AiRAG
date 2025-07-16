@@ -8,6 +8,7 @@ ApplicationWindow {
     width: 1000
     height: 960
     title: "Azure AI Chatbot"
+    color: "#eaeef3"
 
     AiConnector {
         id: ai
@@ -31,18 +32,23 @@ ApplicationWindow {
 
         // Left Panel: Expandable History
         Rectangle {
-            width: showHistory ? 250 : 40
-            color: "#eeeeee"
+            width: showHistory ? 280 : 50
+            color: "#2c3e50"
             Layout.fillHeight: true
-            border.color: "#cccccc"
+            border.color: "#1a252f"
 
             ColumnLayout {
                 anchors.fill: parent
                 spacing: 5
+                //padding: 10
 
                 Button {
-                    text: showHistory ? "<" : ">"
-                    Layout.alignment: Qt.AlignLeft
+                    text: showHistory ? "⮜" : "⮞"
+                    font.pixelSize: 18
+                    background: Rectangle {
+                        color: "#34495e"
+                        radius: 6
+                    }
                     onClicked: showHistory = !showHistory
                 }
 
@@ -58,6 +64,10 @@ ApplicationWindow {
                         width: parent.width
                         text: model.question
                         font.pixelSize: 14
+                        background: Rectangle {
+                            color: "#3b4b5a"
+                            radius: 6
+                        }
                         onClicked: {
                             questionField.text = model.question
                             answerText.text = model.answer
@@ -71,17 +81,18 @@ ApplicationWindow {
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            color: "#f5f5f5"
+            color: "#f9f9fb"
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: 20
+                anchors.margins: 30
                 spacing: 20
 
                 Text {
-                    text: "Ask question about the Help"
-                    font.pixelSize: 28
+                    text: "💬 Azure AI Chatbot"
+                    font.pixelSize: 32
                     font.bold: true
+                    color: "#2c3e50"
                 }
 
                 TextField {
@@ -90,31 +101,45 @@ ApplicationWindow {
                     placeholderText: "Type your question..."
                     font.pixelSize: 18
                     padding: 10
+                    background: Rectangle {
+                        color: "#ffffff"
+                        radius: 8
+                        border.color: "#cccccc"
+                    }
                     onAccepted: askButton.clicked()
                 }
 
                 Button {
                     id: askButton
-                    text: "Press Enter"
+                    text: "Ask"
                     Layout.fillWidth: true
                     font.pixelSize: 18
+                    background: Rectangle {
+                        color: "#3498db"
+                        radius: 8
+                    }
+                    contentItem: Text {
+                        text: qsTr("Ask")
+                        color: "white"
+                        font.pixelSize: 18
+                        anchors.centerIn: parent
+                    }
                     onClicked: ai.askQuestion(questionField.text)
                 }
 
-                Flickable {
+                Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 300
-                    clip: true
-                    contentWidth: parent.width
-                    contentHeight: answerText.paintedHeight + 40
-                    flickableDirection: Flickable.VerticalFlick
+                    radius: 10
+                    color: "#ffffff"
+                    border.color: "#d0d0d0"
 
-                    Rectangle {
-                        width: parent.width
-                        height: answerText.paintedHeight + 40
-                        color: "#ffffff"
-                        radius: 8
-                        border.color: "#cccccc"
+                    Flickable {
+                        anchors.fill: parent
+                        contentWidth: parent.width
+                        contentHeight: answerText.paintedHeight + 40
+                        clip: true
+                        flickableDirection: Flickable.VerticalFlick
 
                         Text {
                             id: answerText
@@ -123,6 +148,7 @@ ApplicationWindow {
                             width: parent.width - 40
                             anchors.centerIn: parent
                             font.pixelSize: 16
+                            color: "#2c3e50"
                         }
                     }
                 }
