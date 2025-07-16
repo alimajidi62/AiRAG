@@ -10,6 +10,16 @@ ApplicationWindow {
 
     AiConnector {
         id: ai
+        onAnswerChanged: {
+            historyModel.append({
+                question: questionField.text,
+                answer: ai.answer
+            })
+        }
+    }
+
+    ListModel {
+        id: historyModel
     }
 
     Rectangle {
@@ -19,7 +29,7 @@ ApplicationWindow {
         Column {
             anchors.centerIn: parent
             spacing: 20
-            width: parent.width * 0.99
+            width: parent.width * 0.95
 
             Text {
                 text: "Ask question about the Help"
@@ -46,12 +56,11 @@ ApplicationWindow {
 
             Flickable {
                 width: parent.width
-                height: 820
+                height: 300
                 clip: true
                 contentWidth: parent.width
                 contentHeight: answerText.paintedHeight + 40
                 flickableDirection: Flickable.VerticalFlick
-
                 Rectangle {
                     width: parent.width
                     height: answerText.paintedHeight + 40
@@ -66,6 +75,31 @@ ApplicationWindow {
                         width: parent.width - 40
                         anchors.centerIn: parent
                         font.pixelSize: 16
+                    }
+                }
+            }
+
+            Text {
+                text: "Previous Questions"
+                font.pixelSize: 20
+                font.bold: true
+                padding: 10
+            }
+
+            ListView {
+                width: parent.width
+                height: 200
+                model: historyModel
+                clip: true
+                spacing: 10
+
+                delegate: Button {
+                    width: parent.width
+                    text: model.question
+                    font.pixelSize: 16
+                    onClicked: {
+                        questionField.text = model.question
+                        answerText.text = model.answer
                     }
                 }
             }
