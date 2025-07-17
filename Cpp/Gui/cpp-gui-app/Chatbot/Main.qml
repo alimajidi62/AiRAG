@@ -203,7 +203,31 @@ ApplicationWindow {
                     color: "#9a9ccf"
                     anchors.horizontalCenter: parent.horizontalCenter
                 }
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: parent.height * 0.7
+                    radius: 14
+                    color: "#f7f8fa"
+                    border.color: "#d0d3e2"
 
+                    Flickable {
+                        anchors.fill: parent
+                        contentWidth: parent.width
+                        contentHeight: answerText.paintedHeight + 40
+                        clip: true
+                        flickableDirection: Flickable.VerticalFlick
+
+                        Text {
+                            id: answerText
+                            text: ai.answer
+                            wrapMode: Text.Wrap
+                            width: parent.width - 40
+                            anchors.centerIn: parent
+                            font.pixelSize: 18
+                            color: "#222a3a"
+                        }
+                    }
+                }
                 Rectangle {
                     Layout.fillWidth: true
                     radius: 12
@@ -259,31 +283,7 @@ ApplicationWindow {
                     palette.highlight: "#5a6cff"
                 }
 
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: parent.height * 0.7
-                    radius: 14
-                    color: "#f7f8fa"
-                    border.color: "#d0d3e2"
 
-                    Flickable {
-                        anchors.fill: parent
-                        contentWidth: parent.width
-                        contentHeight: answerText.paintedHeight + 40
-                        clip: true
-                        flickableDirection: Flickable.VerticalFlick
-
-                        Text {
-                            id: answerText
-                            text: ai.answer
-                            wrapMode: Text.Wrap
-                            width: parent.width - 40
-                            anchors.centerIn: parent
-                            font.pixelSize: 18
-                            color: "#222a3a"
-                        }
-                    }
-                }
             }
         }
     }
