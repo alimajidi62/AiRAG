@@ -110,6 +110,7 @@ ApplicationWindow {
 
                 Button {
                     id: openDocButton
+                    visible: showHistory
                     text: "📄 Open Document"
                     font.pixelSize: 16
                     Layout.alignment: Qt.AlignCenter
