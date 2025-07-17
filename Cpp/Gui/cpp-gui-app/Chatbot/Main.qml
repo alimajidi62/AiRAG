@@ -9,28 +9,20 @@ ApplicationWindow {
     width: 1000
     height: 960
     title: "Azure AI Chatbot"
-    color: "#f0f4f8"
-
+    color: "#eaeef3"
     Settings {
         id: settings
         property string savedHistoryJson: "[]"
     }
-
     AiConnector {
         id: ai
         onAnswerChanged: {
-            let newEntry = {
+            historyModel.append({
                 question: questionField.text,
                 answer: ai.answer
-            }
-            historyModel.append(newEntry)
+            })
             answerText.text = ai.answer
-
-            let historyArray = []
-            for (let i = 0; i < historyModel.count; i++) {
-                historyArray.push(historyModel.get(i))
-            }
-            settings.savedHistoryJson = JSON.stringify(historyArray)
+            isLoading = false
         }
     }
 
@@ -38,30 +30,22 @@ ApplicationWindow {
         id: historyModel
     }
 
-    Component.onCompleted: {
-        let saved = JSON.parse(settings.savedHistoryJson)
-        for (let i = 0; i < saved.length; i++) {
-            historyModel.append(saved[i])
-        }
-    }
-
     property bool showHistory: true
-
+    property bool isLoading: false
     RowLayout {
         anchors.fill: parent
         spacing: 0
 
-        // Left Panel: History
+        // Left Panel: Expandable History
         Rectangle {
-            width: showHistory ? 260 : 50
-            color: "#e3eaf0"
+            width: showHistory ? 280 : 50
+            color: "#eeeefe"
             Layout.fillHeight: true
-            border.color: "#c0cbd4"
-            radius: 8
+            border.color: "#5a555f"
 
             ColumnLayout {
                 anchors.fill: parent
-                spacing: 10
+                spacing: 5
                 //padding: 10
 
                 Button {
@@ -72,26 +56,6 @@ ApplicationWindow {
                         radius: 6
                     }
                     onClicked: showHistory = !showHistory
-                    background: Rectangle {
-                        color: "#d0dce7"
-                        radius: 6
-                    }
-                }
-
-                Button {
-                    text: "🗑 Clear History"
-                    visible: showHistory
-                    Layout.alignment: Qt.AlignCenter
-                    onClicked: {
-                        historyModel.clear()
-                        settings.savedHistoryJson = "[]"
-                        answerText.text = ""
-                        questionField.text = ""
-                    }
-                    background: Rectangle {
-                        color: "#ffdddd"
-                        radius: 6
-                    }
                 }
 
                 ListView {
@@ -100,7 +64,7 @@ ApplicationWindow {
                     Layout.fillHeight: true
                     model: historyModel
                     clip: true
-                    spacing: 6
+                    spacing: 5
 
                     delegate: Button {
                         width: parent.width
@@ -114,11 +78,6 @@ ApplicationWindow {
                             questionField.text = model.question
                             answerText.text = model.answer
                         }
-                        background: Rectangle {
-                            color: "#ffffff"
-                            border.color: "#c0cbd4"
-                            radius: 6
-                        }
                     }
                 }
             }
@@ -128,17 +87,16 @@ ApplicationWindow {
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            color: "#ffffff"
-            radius: 8
+            color: "#f9f9fb"
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: 24
+                anchors.margins: 30
                 spacing: 20
 
                 Text {
-                    text: "💬 Ask a question"
-                    font.pixelSize: 28
+                    text: "💬 Azure AI Chatbot"
+                    font.pixelSize: 32
                     font.bold: true
                     color: "#2c3e50"
                 }
@@ -148,11 +106,11 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     placeholderText: "Type your question..."
                     font.pixelSize: 18
-                    padding: 12
+                    padding: 10
                     background: Rectangle {
-                        color: "#f0f4f8"
+                        color: "#ffffff"
                         radius: 8
-                        border.color: "#c0cbd4"
+                        border.color: "#cccccc"
                     }
                     onAccepted: askButton.clicked()
                 }
@@ -163,32 +121,43 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     font.pixelSize: 18
                     background: Rectangle {
-                        color: "#0078d4"
+                        color: "#3498db"
                         radius: 8
                     }
                     contentItem: Text {
-                        text: askButton.text
+                        text: qsTr("Ask")
                         color: "white"
                         font.pixelSize: 18
                         anchors.centerIn: parent
                     }
-                    onClicked: ai.askQuestion(questionField.text)
+                    onClicked:
+                    {
+                        isLoading = true
+                        ai.askQuestion(questionField.text)
+                    }
                 }
-
+                BusyIndicator {
+                    visible: isLoading
+                    running: isLoading
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: askButton.bottom
+                    anchors.topMargin: 10
+                    width: 40
+                    height: 40
+                }
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 300
-                    clip: true
-                    contentWidth: parent.width
-                    contentHeight: answerText.paintedHeight + 40
-                    flickableDirection: Flickable.VerticalFlick
+                    radius: 10
+                    color: "#ffffff"
+                    border.color: "#d0d0d0"
 
-                    Rectangle {
-                        width: parent.width
-                        height: answerText.paintedHeight + 40
-                        color: "#ffffff"
-                        radius: 8
-                        border.color: "#cccccc"
+                    Flickable {
+                        anchors.fill: parent
+                        contentWidth: parent.width
+                        contentHeight: answerText.paintedHeight + 40
+                        clip: true
+                        flickableDirection: Flickable.VerticalFlick
 
                         Text {
                             id: answerText
@@ -197,7 +166,7 @@ ApplicationWindow {
                             width: parent.width - 40
                             anchors.centerIn: parent
                             font.pixelSize: 16
-                            color: "#333"
+                            color: "#2c3e50"
                         }
                     }
                 }

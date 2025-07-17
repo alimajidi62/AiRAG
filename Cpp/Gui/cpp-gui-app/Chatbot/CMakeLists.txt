@@ -13,7 +13,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Find Qt6 and required modules
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick QuickControls2)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick QuickControls2 Concurrent)
 
 # Find external dependencies (vcpkg will provide these if toolchain is set)
 set(CURL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/../../../AiTest/vcpkg/packages/curl_x64-windows/include")
@@ -66,6 +66,7 @@ target_link_libraries(appChatbot
     PRIVATE Qt6::Quick
     PRIVATE ${CURL_LIBRARY}
     PRIVATE Qt6::QuickControls2
+    PRIVATE Qt6::Concurrent
     #PRIVATE nlohmann_json::nlohmann_json
 )
 

@@ -2,7 +2,7 @@
 #define AICONNECTOR_H
 #include <QObject>
 #include <QString>
-
+#include <QtConcurrent> // Add this include
 class AiConnector : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString answer READ answer NOTIFY answerChanged)
@@ -19,6 +19,7 @@ signals:
 private:
     QString m_answer;
     void setAnswer(const QString& ans);
+     void askQuestionImpl(const QString& question);
 };
 
 #endif // AICONNECTOR_H

@@ -54,6 +54,12 @@ std::string httpPost(const std::string& url, const std::string& apiKey, const js
 AiConnector::AiConnector(QObject* parent) : QObject(parent) {}
 
 void AiConnector::askQuestion(const QString& question) {
+    QtConcurrent::run([this, question]() {
+        askQuestionImpl(question);
+    });
+}
+
+void AiConnector::askQuestionImpl(const QString& question) {
     QString ddd=QCoreApplication::applicationDirPath();
     // Read keys and endpoints
     auto lines = readLines("../../../../../../Appkey.txt");
@@ -109,6 +115,9 @@ void AiConnector::askQuestion(const QString& question) {
     } catch (...) {
         setAnswer("Error: Failed to parse chat response.");
     }
+    QMetaObject::invokeMethod(this, [this, ans = m_answer]() {
+        setAnswer(ans);
+    }, Qt::QueuedConnection);
 }
 
 void AiConnector::setAnswer(const QString& ans) {
