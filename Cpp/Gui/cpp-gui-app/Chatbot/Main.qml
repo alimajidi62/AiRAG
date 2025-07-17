@@ -10,6 +10,8 @@ ApplicationWindow {
     height: 960
     title: "Azure AI Chatbot"
     color: "#eaeef3"
+    property bool showHistory: true
+    property bool isLoading: false
     Settings {
         id: settings
         property string savedHistoryJson: "[]"
@@ -17,21 +19,30 @@ ApplicationWindow {
     AiConnector {
         id: ai
         onAnswerChanged: {
-            historyModel.append({
+            let newEntry = {
                 question: questionField.text,
                 answer: ai.answer
-            })
+            }
+            historyModel.append(newEntry)
             answerText.text = ai.answer
             isLoading = false
+            let historyArray = []
+            for (let i = 0; i < historyModel.count; i++) {
+                historyArray.push(historyModel.get(i))
+            }
+            settings.savedHistoryJson = JSON.stringify(historyArray)
         }
     }
 
     ListModel {
         id: historyModel
     }
-
-    property bool showHistory: true
-    property bool isLoading: false
+    Component.onCompleted: {
+        let saved = JSON.parse(settings.savedHistoryJson)
+        for (let i = 0; i < saved.length; i++) {
+            historyModel.append(saved[i])
+        }
+    }
     RowLayout {
         anchors.fill: parent
         spacing: 0
@@ -57,7 +68,21 @@ ApplicationWindow {
                     }
                     onClicked: showHistory = !showHistory
                 }
-
+                Button {
+                    text: "🗑 Clear History"
+                    visible: showHistory
+                    Layout.alignment: Qt.AlignCenter
+                    onClicked: {
+                        historyModel.clear()
+                        settings.savedHistoryJson = "[]"
+                        answerText.text = ""
+                        questionField.text = ""
+                    }
+                    background: Rectangle {
+                        color: "#ffdddd"
+                        radius: 6
+                    }
+                }
                 ListView {
                     visible: showHistory
                     Layout.fillWidth: true
@@ -147,7 +172,7 @@ ApplicationWindow {
                 }
                 Rectangle {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 300
+                    Layout.preferredHeight: parent.height*.8
                     radius: 10
                     color: "#ffffff"
                     border.color: "#d0d0d0"
