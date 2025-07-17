@@ -12,7 +12,7 @@ public:
     Q_INVOKABLE void askQuestion(const QString& question);
 
     QString answer() const { return m_answer; }
-
+    Q_INVOKABLE void uploadDocument(const QString& filePath);
 signals:
     void answerChanged();
 

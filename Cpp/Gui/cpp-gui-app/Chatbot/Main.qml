@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import Qt.labs.settings 1.0
+import QtQuick.Dialogs 6.2
 import Chatbot 1.0
 
 ApplicationWindow {
@@ -105,6 +106,41 @@ ApplicationWindow {
                         questionField.text = ""
                     }
                 }
+                // ...existing code...
+
+                Button {
+                    id: openDocButton
+                    text: "📄 Open Document"
+                    font.pixelSize: 16
+                    Layout.alignment: Qt.AlignCenter
+                    background: Rectangle {
+                        color: "#0078d4"
+                        radius: 10
+                        border.color: "#005a9e"
+                    }
+                    contentItem: Text {
+                        text: openDocButton.text
+                        color: "white"
+                        font.pixelSize: 16
+                        anchors.centerIn: parent
+                    }
+                    hoverEnabled: true
+                    onHoveredChanged: background.color = hovered ? "#005a9e" : "#0078d4"
+                    onClicked: fileDialog.open()
+                }
+
+                FileDialog {
+                    id: fileDialog
+                    title: "Select a document"
+                    nameFilters: ["PDF Files (*.pdf)", "Text Files (*.txt)", "All Files (*)"]
+                    onAccepted: {
+                        // Pass the selected file path to C++
+                        ai.uploadDocument(fileDialog.selectedFile)
+                    }
+                    // Optionally, set folder: StandardPaths.home
+                }
+
+                // ...existing code...
 
                 ListView {
                     visible: showHistory

@@ -126,3 +126,8 @@ void AiConnector::setAnswer(const QString& ans) {
         emit answerChanged();
     }
 }
+void AiConnector::uploadDocument(const QString& filePath) {
+    QString localPath = QUrl(filePath).toLocalFile();
+    qDebug() << "Selected document path:" << localPath;
+    // You can process the file here
+}
