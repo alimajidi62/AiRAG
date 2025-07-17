@@ -49,7 +49,6 @@ ApplicationWindow {
         anchors.fill: parent
         spacing: 0
 
-        // Left Panel: Expandable History
         Rectangle {
             width: showHistory ? 320 : 56
             color: "#e0e3ef"
@@ -106,7 +105,6 @@ ApplicationWindow {
                         questionField.text = ""
                     }
                 }
-                // ...existing code...
 
                 Button {
                     id: openDocButton
@@ -135,14 +133,9 @@ ApplicationWindow {
                     title: "Select a document"
                     nameFilters: ["PDF Files (*.pdf)", "Text Files (*.txt)", "All Files (*)"]
                     onAccepted: {
-                        // Pass the selected file path to C++
                         ai.uploadDocument(fileDialog.selectedFile)
                     }
-                    // Optionally, set folder: StandardPaths.home
                 }
-
-                // ...existing code...
-
                 ListView {
                     visible: showHistory
                     Layout.fillWidth: true
@@ -153,7 +146,7 @@ ApplicationWindow {
 
                     delegate: Rectangle {
                         width: parent.width
-                        height: 48
+                        height: 25
                         radius: 8
                         color: "#f7f8fa"
                         border.color: "#d0d3e2"
@@ -184,7 +177,6 @@ ApplicationWindow {
             }
         }
 
-        // Right Panel: Chat UI
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
