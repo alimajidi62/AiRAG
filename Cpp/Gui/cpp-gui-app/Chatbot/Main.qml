@@ -205,7 +205,7 @@ ApplicationWindow {
                 }
                 Rectangle {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: parent.height * 0.7
+                    Layout.preferredHeight: parent.height * 0.75
                     radius: 14
                     color: "#f7f8fa"
                     border.color: "#d0d3e2"
@@ -228,6 +228,15 @@ ApplicationWindow {
                         }
                     }
                 }
+                BusyIndicator {
+                    visible: isLoading
+                    running: isLoading
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.topMargin: 18
+                    width: 48
+                    height: 48
+                    palette.highlight: "#5a6cff"
+                }
                 Rectangle {
                     Layout.fillWidth: true
                     radius: 12
@@ -235,55 +244,47 @@ ApplicationWindow {
                     border.color: "#d0d3e2"
                     height: 56
 
-                    TextField {
-                        id: questionField
+                    RowLayout {
                         anchors.fill: parent
                         anchors.margins: 8
-                        placeholderText: "Type your question..."
-                        font.pixelSize: 18
-                        background: Rectangle {
-                            color: "transparent"
+                        spacing: 8
+
+                        TextField {
+                            id: questionField
+                            Layout.fillWidth: true
+                            placeholderText: "Type your question..."
+                            font.pixelSize: 18
+                            background: Rectangle { color: "transparent" }
+                            onAccepted: askButton.clicked()
                         }
-                        onAccepted: askButton.clicked()
+
+                        Button {
+                            id: askButton
+                            text: "Ask"
+                            Layout.preferredWidth: 80
+                            Layout.alignment: Qt.AlignVCenter
+                            font.pixelSize: 18
+                            background: Rectangle {
+                                color: "#9a9ccf"
+                                radius: 12
+                                border.color: "#3a4ccf"
+                            }
+                            contentItem: Text {
+                                text: askButton.text
+                                color: "white"
+                                font.pixelSize: 18
+                                font.bold: true
+                                anchors.centerIn: parent
+                            }
+                            hoverEnabled: true
+                            onHoveredChanged: background.color = hovered ? "#3a4ccf" : "#9a9ccf"
+                            onClicked: {
+                                isLoading = true
+                                ai.askQuestion(questionField.text)
+                            }
+                        }
                     }
                 }
-
-                Button {
-                    id: askButton
-                    text: "Ask"
-                    Layout.fillWidth: true
-                    font.pixelSize: 20
-                    background: Rectangle {
-                        color: "#9a9ccf"
-                        radius: 12
-                        border.color: "#3a4ccf"
-                    }
-                    contentItem: Text {
-                        text: qsTr("Ask")
-                        color: "white"
-                        font.pixelSize: 20
-                        anchors.centerIn: parent
-                    }
-                    hoverEnabled: true
-                    onHoveredChanged: background.color = hovered ? "#3a4ccf" : "#5a6cff"
-                    onClicked: {
-                        isLoading = true
-                        ai.askQuestion(questionField.text)
-                    }
-                }
-
-                BusyIndicator {
-                    visible: isLoading
-                    running: isLoading
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.top: askButton.bottom
-                    anchors.topMargin: 18
-                    width: 48
-                    height: 48
-                    palette.highlight: "#5a6cff"
-                }
-
-
             }
         }
     }
