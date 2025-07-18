@@ -68,7 +68,29 @@ target_link_libraries(appChatbot
     PRIVATE Qt6::QuickControls2
     PRIVATE Qt6::Concurrent
     #PRIVATE nlohmann_json::nlohmann_json
-)
+)    # "${Qt6_DIR}/../../../bin/Qt6Quick.dll"
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(DLLS_TO_COPY
+        "${CMAKE_SOURCE_DIR}/libcurl.dll"
+        "${CMAKE_SOURCE_DIR}/zlibd1.dll"
+        # "${Qt6_DIR}/../../../bin/Qt6QuickControls2.dll"
+        # "${Qt6_DIR}/../../../bin/Qt6Concurrent.dll"
+        # Set DLLs to copy based on build type
+        # Add other debug DLLs as needed
+    )
+else()
+    set(DLLS_TO_COPY
+        "${CMAKE_SOURCE_DIR}/libcurl.dll"
+        "${CMAKE_SOURCE_DIR}/zlib1.dll"
+        # Add other release DLLs as needed
+    )
+endif()
+
+add_custom_command(TARGET appChatbot POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${DLLS_TO_COPY}
+        $<TARGET_FILE_DIR:appChatbot>
+)
 # Install rules
 include(GNUInstallDirs)
