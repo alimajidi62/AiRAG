@@ -35,22 +35,25 @@ namespace chatbot
         }
         private async void AskButton_Click(object sender, RoutedEventArgs e)
         {
-            string question = QuestionTextBox.Text;
-            if (string.IsNullOrWhiteSpace(question))
-            {
-                AnswerTextBlock.Text = "Please enter a question.";
-                return;
-            }
+  string question = QuestionTextBox.Text;
+    if (string.IsNullOrWhiteSpace(question))
+    {
+        AnswerTextBlock.Text = "Please enter a question.";
+        return;
+    }
 
-            AskButton.IsEnabled = false;
-            AnswerTextBlock.Text = "Thinking...";
-            string answer = await chatService.AskQuestionAsync(question);
-            AnswerTextBlock.Text = answer;
-            AskButton.IsEnabled = true;
+    AskButton.IsEnabled = false;
+    SpinnerOverlay.Visibility = Visibility.Visible; // Show spinner
 
-            // Add to history
-            historyItems.Insert(0, new HistoryItem { Question = question, Answer = answer });
-            SaveHistory();
+    string answer = await chatService.AskQuestionAsync(question);
+
+    SpinnerOverlay.Visibility = Visibility.Collapsed; // Hide spinner
+    AnswerTextBlock.Text = answer;
+    AskButton.IsEnabled = true;
+
+    // Add to history
+    historyItems.Insert(0, new HistoryItem { Question = question, Answer = answer });
+    SaveHistory();
         }
 
         private void HistoryButton_Click(object sender, RoutedEventArgs e)
@@ -75,7 +78,28 @@ namespace chatbot
                 }
             }
         }
-
+private void ToggleHistoryButton_Click(object sender, RoutedEventArgs e)
+{
+    if (HistoryPanelGrid.Visibility == Visibility.Visible)
+    {
+        HistoryPanelGrid.Visibility = Visibility.Collapsed;
+        ToggleHistoryButton.Content = "Show History";
+        HistoryColumn.Width = new GridLength(0);      // Collapse history column
+        MainColumn.Width = new GridLength(1, GridUnitType.Star); // Main panel takes all space
+    }
+    else
+    {
+        HistoryPanelGrid.Visibility = Visibility.Visible;
+        ToggleHistoryButton.Content = "Hide History";
+        HistoryColumn.Width = new GridLength(1, GridUnitType.Star);   // 1/3 for history
+        MainColumn.Width = new GridLength(2, GridUnitType.Star);      // 2/3 for main panel
+    }
+}
+        private void ClearHistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            historyItems.Clear();
+            SaveHistory(); // If you have a SaveHistory method for persistence
+        }
         private void SaveHistory()
         {
             var json = JsonConvert.SerializeObject(historyItems);
