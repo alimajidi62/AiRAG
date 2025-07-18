@@ -323,9 +323,6 @@ This repository also includes a **Qt Quick (QML) graphical user interface** for 
 - **QML UI:** [`Cpp/Gui/cpp-gui-app/Chatbot/Main.qml`](Cpp/Gui/cpp-gui-app/Chatbot/Main.qml)
 - **Backend Integration:** C++/QML bridge code connects the UI to Azure services.
 - 
-
-https://github.com/user-attachments/assets/4600595b-d03f-4eb4-81c0-306e0a28eee5
-
-
+<img width="1001" height="992" alt="image" src="https://github.com/user-attachments/assets/9e0cf75f-45b1-42ce-b87b-771906752700" />
 
 ---
