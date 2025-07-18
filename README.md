@@ -322,7 +322,45 @@ This repository also includes a **Qt Quick (QML) graphical user interface** for 
 
 - **QML UI:** [`Cpp/Gui/cpp-gui-app/Chatbot/Main.qml`](Cpp/Gui/cpp-gui-app/Chatbot/Main.qml)
 - **Backend Integration:** C++/QML bridge code connects the UI to Azure services.
-- 
+- ### 🖼️ Qt Chatbot UI Overview
+
+The screenshot above shows the **Qt Quick (QML) graphical user interface** for the Azure AI Chatbot. The UI is designed for a modern, intuitive chat experience:
+
+#### Layout and Features
+
+- **Left Panel (History & Actions):**
+  - **History List:**  
+    Displays previous questions asked by the user, with the newest at the top. Each entry is clickable, allowing you to reload a previous question and its answer.
+  - **Clear History Button:**  
+    Removes all previous questions and answers from the history list.
+  - **Open Document Button:**  
+    Lets you upload a document (such as a PDF or text file) to be indexed and used for future AI responses.
+
+- **Right Panel (Chat Area):**
+  - **Header:**  
+    Shows the application title, "Azure AI Chatbot," with a chat icon.
+  - **Answer Display:**  
+    The main area displays the AI’s response, including formatted tables and summaries based on your question and the indexed documents.
+  - **Question Input Row:**  
+    At the bottom, you can type your question in the text field.  
+    The **Ask** button is placed to the right of the input field for quick access.
+
+#### How It Works
+
+1. **Ask a Question:**  
+   Type your question in the input field and click **Ask**. The AI will search the indexed documents and provide a grounded answer.
+2. **View History:**  
+   All previous questions are saved in the left panel. Click any entry to view its answer again.
+3. **Upload Documents:**  
+   Use the **Open Document** button to add new documents to the search index, expanding the knowledge base for future queries.
+4. **Clear History:**  
+   Use the **Clear History** button to reset the chat history.
+
+#### Styling
+
+- The interface uses soft colors and rounded corners for a friendly, modern look.
+- Buttons are styled with color changes on hover for better interactivity.
+- The chat area supports rich text and tables for detailed answers.
 <img width="1001" height="992" alt="image" src="https://github.com/user-attachments/assets/9e0cf75f-45b1-42ce-b87b-771906752700" />
 
 ---
