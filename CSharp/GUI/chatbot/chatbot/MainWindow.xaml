@@ -1,0 +1,80 @@
+﻿<Window x:Class="chatbot.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Chatbot" Height="850" Width="800"
+        WindowStartupLocation="CenterScreen"
+        Background="#23272F">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- History Panel -->
+        <Border Grid.Column="0" Background="#20232A" Padding="16" Margin="24,24,0,24" CornerRadius="12">
+            <StackPanel>
+                <TextBlock Text="History" FontSize="20" FontWeight="Bold" Foreground="#F6F8FA" Margin="0,0,0,16"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl Name="HistoryItemsPanel">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding Question}"
+                                        Margin="0,0,0,8"
+                                        Padding="8"
+                                        Background="#2D333B"
+                                        Foreground="#F6F8FA"
+                                        BorderBrush="#586069"
+                                        BorderThickness="1"
+                                        HorizontalContentAlignment="Left"
+                                        Cursor="Hand"
+                                        Click="HistoryButton_Click"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Chat Area -->
+        <Border Grid.Column="1" CornerRadius="16" Padding="32" Background="#2D333B" Margin="24">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="400">
+                <TextBlock Text="AI Chatbot" FontSize="28" FontWeight="Bold" Foreground="#F6F8FA" Margin="0,0,0,24" HorizontalAlignment="Center"/>
+                <TextBox Name="QuestionTextBox"
+                         Height="40"
+                         Margin="0,0,0,16"
+                         FontSize="16"
+                         Padding="10"
+                         Background="#22272E"
+                         Foreground="#F6F8FA"
+                         BorderBrush="#586069"
+                         BorderThickness="2"
+                         VerticalContentAlignment="Center"
+                         ToolTip="Type your question here..." 
+                         KeyDown="QuestionTextBox_KeyDown"/>
+                <Button Name="AskButton"
+                        Content="Ask"
+                        Height="40"
+                        FontSize="16"
+                        Background="#238636"
+                        Foreground="White"
+                        BorderThickness="0"
+                        Margin="0,0,0,16"
+                        Cursor="Hand"
+                        Padding="10,0"
+                        Click="AskButton_Click">
+                    <Button.Effect>
+                        <DropShadowEffect Color="#000" BlurRadius="8" ShadowDepth="2"/>
+                    </Button.Effect>
+                </Button>
+                <Border Background="#161B22" CornerRadius="8" Padding="16">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" Height="120">
+                        <TextBlock Name="AnswerTextBlock"
+                            FontSize="16"
+                            Foreground="#F6F8FA"
+                            TextWrapping="Wrap"/>
+                    </ScrollViewer>
+                </Border>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

@@ -13,3 +13,6 @@ CSharp/obj
 Cpp/Gui/cpp-gui-app/Chatbot/build
 .vscode
 Cpp/Gui/cpp-gui-app/Chatbot/CMakeLists.txt.user
+CSharp/GUI/chatbot/chatbot/.vs
+CSharp/GUI/chatbot/chatbot/bin
+CSharp/GUI/chatbot/chatbot/obj
