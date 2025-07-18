@@ -361,8 +361,9 @@ The screenshot above shows the **Qt Quick (QML) graphical user interface** for t
 - The interface uses soft colors and rounded corners for a friendly, modern look.
 - Buttons are styled with color changes on hover for better interactivity.
 - The chat area supports rich text and tables for detailed answers.
+#### QML
 <img width="1001" height="992" alt="image" src="https://github.com/user-attachments/assets/9e0cf75f-45b1-42ce-b87b-771906752700" />
-Wpf version
+#### Wpf
 <img width="787" height="851" alt="image" src="https://github.com/user-attachments/assets/d4c67638-d305-4a1b-9e1b-de8c9da3e4dd" />
 
 
