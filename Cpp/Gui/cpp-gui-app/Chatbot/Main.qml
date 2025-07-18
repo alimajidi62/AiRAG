@@ -26,7 +26,7 @@ ApplicationWindow {
                 question: questionField.text,
                 answer: ai.answer
             }
-            historyModel.append(newEntry)
+             historyModel.insert(0, newEntry)
             answerText.text = ai.answer
             isLoading = false
             let historyArray = []
