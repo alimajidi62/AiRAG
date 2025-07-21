@@ -1,12 +1,19 @@
-# Azure AI RAG Demo
+<!--
+SEO KEYWORDS: Azure AI, Retrieval-Augmented Generation, RAG, Cognitive Search, OpenAI, Document Intelligence, Form Recognizer, PDF OCR, Table Extraction, Image Analysis, AI Chatbot, Multi-Agent AI, Azure AI Studio, C#, Python, C++, QML, WPF, Chatbot UI, Document Analysis, Knowledge Base, Enterprise Search, AI Workflow, Microsoft Azure, Large Language Model, LLM, AI Demo, AI Example, AI Tutorial, AI Sample Code
+-->
 
-This repository demonstrates three different ways to connect to Azure AI services and implement Retrieval-Augmented Generation (RAG) using Azure Cognitive Search. Code examples are provided in **Python**, **C#**, and **C++**.
+# Azure AI RAG Demo – Multi-Agent Chatbot, Document Analysis, and Cognitive Search
+
+<!--
+This repository demonstrates how to build an enterprise-ready AI chatbot using Azure AI, Retrieval-Augmented Generation (RAG), and Azure Cognitive Search. Features include multi-agent document analysis (image, table, and text extraction), PDF and image OCR, and a modern UI in C#, Python, C++, QML, and WPF. Ideal for developers, data scientists, and enterprises looking to implement advanced AI search and document understanding solutions.
+-->
 
 ---
 
 ## 🚀 Overview
 
-**Retrieval-Augmented Generation (RAG)** combines the power of large language models with external data sources. In this repo, Azure Cognitive Search is used to search specific documents and provide relevant context to the AI model for more accurate and grounded answers.
+**Retrieval-Augmented Generation (RAG)** combines the power of large language models with external data sources. In this repo, Azure Cognitive Search is used to search specific documents and provide relevant context to the AI model for more accurate and grounded answers.  
+**Keywords:** Azure AI, RAG, Cognitive Search, OpenAI, Document Intelligence, PDF OCR, Table Extraction, AI Chatbot, Multi-Agent, Enterprise Search.
 
 ---
 
@@ -93,6 +100,7 @@ This file demonstrates how the Retrieval-Augmented Generation (RAG) approach can
 - **C++:** `libcurl`, `nlohmann/json`
 
 ---
+
 ## 🆘 How to Set Up Azure AI and Azure Cognitive Search
 
 To use this repo, you need to create resources in your Azure portal and obtain the required API keys and endpoints.
@@ -149,6 +157,7 @@ If you need more help, see the official documentation:
 - [Azure Cognitive Search documentation](https://learn.microsoft.com/azure/search/)
 
 ---
+
 ## ▶️ Usage
 
 1. Fill in [`Appkey.txt`](Appkey.txt) with your Azure endpoints and keys.
@@ -163,6 +172,7 @@ If you need more help, see the official documentation:
      Open [`Cpp/AiTest/AiTest.sln`](Cpp/AiTest/AiTest.sln) in Visual Studio and run.
 
 ---
+
 ---
 
 ## 📑 Using Azure AI Document Intelligence (Form Recognizer)
@@ -199,6 +209,7 @@ You can also use [Azure AI Document Intelligence (formerly Form Recognizer)](htt
 3. **Index Extracted Data in Azure Cognitive Search**
    - After extracting the content, upload it to your Azure Cognitive Search index (as shown in the setup steps above).
    - This allows you to search and ground your AI responses in the content of scanned documents, PDFs, and more.
+
 ---
 
 ## 📚 Understanding the Azure Cognitive Search Index
@@ -250,17 +261,18 @@ indexClient.CreateOrUpdateIndex(definition);
 
 **In summary:**  
 The index is the core of your search experience. Make sure it has the right fields, and always include an `id` when uploading documents. All search and retrieval in this repo is performed against the `content` field of your index.
+
 **Tip:**  
 Document Intelligence is especially useful for digitizing and searching large collections of scanned files, forms, or complex documents.
 
 ---
+
 ## ⚠️ Notes
-
-
 
 - This repo is for demonstration purposes and does not include production-level error handling or security.
 - Make sure your Azure Search index contains the documents you want to query.
-<!-- Add this section before the final --- at the end of your README.md -->
+
+<!-- SEO: Example, Table, and Chatbot UI for Azure AI, RAG, Cognitive Search, and Document Intelligence -->
 
 ---
 
@@ -322,12 +334,18 @@ This repository also includes a **Qt Quick (QML) graphical user interface** for 
 
 - **QML UI:** [`Cpp/Gui/cpp-gui-app/Chatbot/Main.qml`](Cpp/Gui/cpp-gui-app/Chatbot/Main.qml)
 - **Backend Integration:** C++/QML bridge code connects the UI to Azure services.
-- ### 🖼️ Qt Chatbot UI Overview
 
-The screenshot above shows the **Qt Quick (QML) graphical user interface** for the Azure AI Chatbot. The UI is designed for a modern, intuitive chat experience:
+### 🖼️ Qt Chatbot UI Overview
+
+The screenshot above shows the **Qt Quick (QML) graphical user interface** for the Azure AI Chatbot. The UI is designed for a modern, intuitive chat experience.
+
 ---
 
 ## 🤖 Using Azure AI Agents for Multi-Task Document Analysis
+
+<!--
+Learn how to use Azure AI agents for parallel document processing, including image analysis, table extraction, and text summarization. This approach enables advanced document understanding and enterprise search solutions.
+-->
 
 Azure AI now supports the use of **agents**—specialized components that can each handle a specific type of task within your AI workflow. This enables you to process and explore documents in parallel, assigning each agent a unique role, such as image analysis or table extraction.
 
@@ -353,13 +371,20 @@ Azure AI now supports the use of **agents**—specialized components that can ea
    - You can chain agents together or trigger them based on document content.
 
 ### Example Use Case
-  
+
 When a user uploads a PDF containing both scanned images and tables:
 - The **image agent** extracts text from images (using OCR).
 - The **table agent** converts tables into structured data.
 - The **text agent** summarizes the document or answers user questions using all extracted content.
 
-This agent-based approach enables more accurate and comprehensive document analysis, leveraging the strengths of each specialized
+This agent-based approach enables more accurate and comprehensive document analysis, leveraging the strengths of each specialized AI component.
+
+---
+
+<!--
+For more Azure AI, RAG, Cognitive Search, and Document Intelligence examples, see the official Microsoft documentation and this repository's code samples.
+-->
+
 #### Layout and Features
 
 - **Left Panel (History & Actions):**
@@ -395,14 +420,17 @@ This agent-based approach enables more accurate and comprehensive document analy
 - The interface uses soft colors and rounded corners for a friendly, modern look.
 - Buttons are styled with color changes on hover for better interactivity.
 - The chat area supports rich text and tables for detailed answers.
+
 #### QML
 
 <img width="1001" height="992" alt="image" src="https://github.com/user-attachments/assets/9e0cf75f-45b1-42ce-b87b-771906752700" />
 
 #### WPF
 
-
 <img width="787" height="851" alt="image" src="https://github.com/user-attachments/assets/d4c67638-d305-4a1b-9e1b-de8c9da3e4dd" />
 
-
 ---
+
+<!--
+SEO: Azure AI, RAG, Cognitive Search, Document Intelligence, AI Chatbot, Multi-Agent, PDF OCR, Table Extraction, Enterprise Search, OpenAI, Microsoft Azure, AI Example, AI Tutorial, AI Sample Code
+-->
