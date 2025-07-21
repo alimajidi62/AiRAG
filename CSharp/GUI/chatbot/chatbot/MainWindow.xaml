@@ -1,11 +1,13 @@
 ﻿<Window x:Class="chatbot.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Chatbot" Height="850" Width="800"
+    Title="Chatbot" Height="700" Width="800"
     WindowStartupLocation="CenterScreen"
     Background="#F5F8FF">
+    <!-- Root Grid for the entire window -->
     <Grid>
-        <!-- Toggle History Button absolutely positioned -->
+        <!-- Toggle History Button -->
+        <!-- This button allows the user to toggle the visibility of the history panel -->
         <Button x:Name="ToggleHistoryButton"
             Content="Hide History"
             Background="#2563EB"
@@ -22,18 +24,24 @@
             Panel.ZIndex="100" />
 
         <!-- Main layout grid -->
+        <!-- This grid divides the window into two columns: History and Main Chat Area -->
         <Grid Margin="0,60,0,0">
             <Grid.ColumnDefinitions>
+                <!-- History column -->
                 <ColumnDefinition Width="*" x:Name="HistoryColumn" />
+                <!-- Main chat area column -->
                 <ColumnDefinition Width="2*" x:Name="MainColumn" />
             </Grid.ColumnDefinitions>
 
             <!-- History Panel -->
+            <!-- This grid contains the history panel where previous questions are displayed -->
             <Grid Grid.Column="0" x:Name="HistoryPanelGrid">
                 <Border Background="#E3ECFF" Padding="16" Margin="0,40,0,24" CornerRadius="12">
                     <StackPanel>
+                        <!-- Title for the history panel -->
                         <TextBlock Text="History" FontSize="20" FontWeight="Bold"
                             Foreground="#1B3A7A" Margin="0,0,0,16" />
+                        <!-- Button to clear the history -->
                         <Button Name="ClearHistoryButton"
                             Content="Clear History"
                             Background="#2563EB"
@@ -45,10 +53,12 @@
                             BorderThickness="0"
                             Cursor="Hand"
                             Click="ClearHistoryButton_Click" />
+                        <!-- Scrollable list of history items -->
                         <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="500">
                             <ItemsControl Name="HistoryItemsPanel">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
+                                        <!-- Each history item is displayed as a button -->
                                         <Button Content="{Binding Question}"
                                             Margin="0,0,0,8"
                                             Padding="8"
@@ -70,17 +80,24 @@
             </Grid>
 
             <!-- Main Chat Area -->
+            <!-- This section contains the main chat interface -->
             <Border Grid.Column="1" CornerRadius="16" Padding="32" Background="#FFFFFF" Margin="24">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <!-- Title row -->
                         <RowDefinition Height="Auto" />
+                        <!-- Input row -->
                         <RowDefinition Height="Auto" />
+                        <!-- Chat display row -->
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
+                    <!-- Title for the chatbot -->
                     <TextBlock Text="AI Chatbot" FontSize="32" FontWeight="Bold"
                         Foreground="#2563EB"
                         Margin="0,0,0,24" HorizontalAlignment="Center" Grid.Row="0" />
+                    <!-- Input area for questions -->
                     <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,16">
+                        <!-- TextBox for user input -->
                         <TextBox Name="QuestionTextBox"
                             MinHeight="40"
                             FontSize="16"
@@ -94,6 +111,7 @@
                             KeyDown="QuestionTextBox_KeyDown"
                             Width="260"
                             Margin="0,0,8,0" />
+                        <!-- Button to submit the question -->
                         <Button Name="AskButton"
                             Content="Ask"
                             MinHeight="40"
@@ -106,15 +124,17 @@
                             Click="AskButton_Click"
                             Width="80">
                             <Button.Effect>
+                                <!-- Drop shadow effect for the button -->
                                 <DropShadowEffect Color="#3B82F6" BlurRadius="8" ShadowDepth="2" />
                             </Button.Effect>
                         </Button>
-
                     </StackPanel>
+                    <!-- Display area for the question and answer -->
                     <Border Background="#E3ECFF" CornerRadius="8" Padding="16" Grid.Row="2"
                         VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel>
+                                <!-- Displayed question -->
                                 <TextBlock Text="Question:" FontWeight="Bold" Foreground="#2563EB"
                                     Margin="0,0,0,4" FontSize="16" />
                                 <TextBlock Name="DisplayedQuestionTextBlock"
@@ -122,6 +142,7 @@
                                     Foreground="#1B3A7A"
                                     TextWrapping="Wrap"
                                     Margin="0,0,0,12" />
+                                <!-- Displayed answer -->
                                 <TextBlock Text="Answer:" FontWeight="Bold" Foreground="#2563EB"
                                     Margin="0,0,0,4" FontSize="16" />
                                 <TextBlock Name="AnswerTextBlock"
@@ -131,9 +152,11 @@
                             </StackPanel>
                         </ScrollViewer>
                     </Border>
+                    <!-- Spinner overlay for loading state -->
                     <Grid x:Name="SpinnerOverlay" Visibility="Collapsed" Background="#80FFFFFF"
                         Grid.RowSpan="3" Panel.ZIndex="999">
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <!-- Rotating spinner -->
                             <Ellipse Width="10" Height="10" Stroke="#2563EB" StrokeThickness="6">
                                 <Ellipse.RenderTransform>
                                     <RotateTransform x:Name="SpinnerRotate" Angle="0" />
@@ -151,6 +174,7 @@
                                     </EventTrigger>
                                 </Ellipse.Triggers>
                             </Ellipse>
+                            <!-- Loading message -->
                             <TextBlock Text="Waiting for response..." Foreground="#2563EB"
                                 FontWeight="Bold" FontSize="16" Margin="0,16,0,0"
                                 HorizontalAlignment="Center" />
