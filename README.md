@@ -325,7 +325,41 @@ This repository also includes a **Qt Quick (QML) graphical user interface** for 
 - ### 🖼️ Qt Chatbot UI Overview
 
 The screenshot above shows the **Qt Quick (QML) graphical user interface** for the Azure AI Chatbot. The UI is designed for a modern, intuitive chat experience:
+---
 
+## 🤖 Using Azure AI Agents for Multi-Task Document Analysis
+
+Azure AI now supports the use of **agents**—specialized components that can each handle a specific type of task within your AI workflow. This enables you to process and explore documents in parallel, assigning each agent a unique role, such as image analysis or table extraction.
+
+### How to Use Agents in Azure AI
+
+1. **Define Specialized Agents**
+   - **Image Agent:** Detects and analyzes images within documents (e.g., extracting text from images or identifying objects).
+   - **Table Agent:** Extracts and interprets tables, converting them into structured data for further analysis.
+   - **Text Agent:** Handles general text extraction, summarization, or question answering.
+
+2. **Configure Your Workflow**
+   - Orchestrate these agents so that when a document is uploaded, each agent processes the relevant part:
+     - The image agent scans for embedded images and runs OCR or image classification.
+     - The table agent locates tables and parses their content.
+     - The text agent summarizes or answers questions based on the extracted data.
+
+3. **Parallel and Specialized Processing**
+   - Agents can work in parallel, speeding up document analysis and enabling multi-modal understanding (text, tables, images) in a single workflow.
+   - Each agent can be optimized or fine-tuned for its specific task, improving accuracy and efficiency.
+
+4. **Integration with Azure AI Studio**
+   - Use [Azure AI Studio](https://ai.azure.com/) to configure, deploy, and monitor your agents.
+   - You can chain agents together or trigger them based on document content.
+
+### Example Use Case
+
+When a user uploads a PDF containing both scanned images and tables:
+- The **image agent** extracts text from images (using OCR).
+- The **table agent** converts tables into structured data.
+- The **text agent** summarizes the document or answers user questions using all extracted content.
+
+This agent-based approach enables more accurate and comprehensive document analysis, leveraging the strengths of each specialized
 #### Layout and Features
 
 - **Left Panel (History & Actions):**
