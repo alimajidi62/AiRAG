@@ -353,7 +353,7 @@ Azure AI now supports the use of **agents**—specialized components that can ea
    - You can chain agents together or trigger them based on document content.
 
 ### Example Use Case
-
+  
 When a user uploads a PDF containing both scanned images and tables:
 - The **image agent** extracts text from images (using OCR).
 - The **table agent** converts tables into structured data.
