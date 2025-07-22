@@ -429,7 +429,7 @@ For more Azure AI, RAG, Cognitive Search, and Document Intelligence examples, se
 <img width="787" height="851" alt="image" src="https://github.com/user-attachments/assets/d4c67638-d305-4a1b-9e1b-de8c9da3e4dd" />
 
 ---
-
+need to add llm for anlayse the image 
 <!--
 SEO: Azure AI, RAG, Cognitive Search, Document Intelligence, AI Chatbot, Multi-Agent, PDF OCR, Table Extraction, Enterprise Search, OpenAI, Microsoft Azure, AI Example, AI Tutorial, AI Sample Code
 -->
