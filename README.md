@@ -15,7 +15,7 @@ This repository demonstrates how to build an enterprise-ready AI chatbot using A
 **Keywords:** Azure AI, RAG, Cognitive Search, OpenAI, Document Intelligence, PDF OCR, Table Extraction, AI Chatbot, Multi-Agent, Enterprise Search.
 
 ---   
-   
+     
 ## 📁 Structure
 
 - **Python:** [`test.py`](test.py)  
