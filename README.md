@@ -149,7 +149,7 @@ worldwar2-index
 ```
 
 ---
-
+ 
 **Tip:**  
 If you need more help, see the official documentation:  
 - [Azure OpenAI Service documentation](https://learn.microsoft.com/azure/ai-services/openai/)
