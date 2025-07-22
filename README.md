@@ -9,7 +9,6 @@ This repository demonstrates how to build an enterprise-ready AI chatbot using A
 -->
 
 ---
-
 ## 🚀 Overview
 
 **Retrieval-Augmented Generation (RAG)** combines the power of large language models with external data sources. In this repo, Azure Cognitive Search is used to search specific documents and provide relevant context to the AI model for more accurate and grounded answers.  
