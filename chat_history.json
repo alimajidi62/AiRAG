@@ -1,0 +1,22 @@
+[
+  {
+    "question": "hi how are you",
+    "answer": "An error occurred: HTTPSConnectionPool(host='searchenginefortest3.search.windows.net', port=443): Max retries exceeded with url: /indexes('worldwar2')/docs/search.post.search?api-version=2024-07-01 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:992)')))"
+  },
+  {
+    "question": "hi",
+    "answer": "An error occurred: HTTPSConnectionPool(host='searchenginefortest3.search.windows.net', port=443): Max retries exceeded with url: /indexes('worldwar2')/docs/search.post.search?api-version=2024-07-01 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:992)')))"
+  },
+  {
+    "question": "hi how are you",
+    "answer": "An error occurred: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:992)"
+  },
+  {
+    "question": "hi how are you",
+    "answer": "An error occurred: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)"
+  },
+  {
+    "question": "hi",
+    "answer": "An error occurred: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)"
+  }
+]

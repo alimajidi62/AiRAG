@@ -8,3 +8,4 @@ Cpp/Gui/cpp-gui-app/Chatbot/CMakeLists.txt.user
 bin
 obj
 .vs
+__pycache__
