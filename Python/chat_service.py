@@ -46,7 +46,7 @@ class ChatService:
         
         self.deployment = "gpt-4.1"
     
-    def _read_keys_from_file(self, filename=r"C:\Majidi\Testcode\Py\AiRAG\Appkey.txt"):
+    def _read_keys_from_file(self, filename=r"Appkey.txt"):
         """Read Azure credentials from the Appkey.txt file."""
         with open(filename, "r") as f:
             lines = f.read().splitlines()
