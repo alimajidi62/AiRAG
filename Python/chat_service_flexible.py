@@ -5,78 +5,88 @@ from openai import AzureOpenAI
 from azure.search.documents import SearchClient
 from azure.core.credentials import AzureKeyCredential
 
-# Configure SSL to use proper certificates (like .NET does)
-def setup_ssl_context():
-    """Setup SSL context to properly validate certificates like .NET"""
-    try:
-        # Method 1: Try to use Windows certificate store (like .NET)
-        if os.name == 'nt':  # Windows
-            try:
-                import wincertstore
-                # This makes Python use Windows certificate store like .NET
-                import ssl
-                import certifi
-                
-                # Get Windows certificates
-                ca_bundle = certifi.where()
-                
-                # Set environment variables
-                os.environ['SSL_CERT_FILE'] = ca_bundle
-                os.environ['REQUESTS_CA_BUNDLE'] = ca_bundle
-                os.environ['CURL_CA_BUNDLE'] = ca_bundle
-                
-                print("✓ SSL configured with Windows certificate store")
-                return True
-                
-            except ImportError:
-                print("wincertstore not available, using fallback")
-        
-        # Method 2: Use certifi's certificate bundle
-        import certifi
-        ca_bundle = certifi.where()
-        
-        os.environ['SSL_CERT_FILE'] = ca_bundle
-        os.environ['REQUESTS_CA_BUNDLE'] = ca_bundle
-        os.environ['CURL_CA_BUNDLE'] = ca_bundle
-        
-        print("✓ SSL configured with certifi certificates")
-        return True
-        
-    except Exception as e:
-        print(f"⚠ All SSL configuration methods failed: {e}")
-        print("Using insecure SSL as fallback (like your original working version)")
-        
-        # Fallback to insecure (but working) SSL
-        import ssl
-        ssl._create_default_https_context = ssl._create_unverified_context
-        return False
-
-# Initialize SSL on import
-setup_ssl_context()
-
-
 class ChatService:
-    def __init__(self):
-        """Initialize the ChatService with Azure OpenAI and Search credentials."""
+    def __init__(self, use_secure_ssl=True):
+        """
+        Initialize the ChatService with Azure OpenAI and Search credentials.
+        
+        Args:
+            use_secure_ssl (bool): If True, attempts secure SSL. If False, uses insecure SSL (like development)
+        """
+        self.use_secure_ssl = use_secure_ssl
+        self._configure_ssl()
+        
         self.endpoint, self.api_key, self.search_key, self.search_endpoint, self.index_name = self._read_keys_from_file()
         
-        # Initialize Azure OpenAI client (like .NET version)
+        # Initialize Azure OpenAI client
         self.client = AzureOpenAI(
             azure_endpoint=self.endpoint,
             api_key=self.api_key,
             api_version="2025-01-01-preview",
         )
         
-        # Initialize Azure Search client (like .NET version)
+        # Initialize Azure Search client
         search_credential = AzureKeyCredential(self.search_key)
-        self.search_client = SearchClient(
-            endpoint=self.search_endpoint,
-            index_name=self.index_name,
-            credential=search_credential
-        )
+        
+        if not self.use_secure_ssl:
+            # Create custom transport that ignores SSL (for problematic networks)
+            from azure.core.pipeline.transport import RequestsTransport
+            import requests
+            
+            class NoSSLTransport(RequestsTransport):
+                def __init__(self):
+                    session = requests.Session()
+                    session.verify = False
+                    super().__init__(session=session)
+            
+            self.search_client = SearchClient(
+                endpoint=self.search_endpoint,
+                index_name=self.index_name,
+                credential=search_credential,
+                transport=NoSSLTransport()
+            )
+        else:
+            self.search_client = SearchClient(
+                endpoint=self.search_endpoint,
+                index_name=self.index_name,
+                credential=search_credential
+            )
         
         self.deployment = "gpt-4.1"
-        print("✓ ChatService initialized with proper SSL validation")
+        print(f"✓ ChatService initialized with {'secure' if use_secure_ssl else 'development'} SSL")
+    
+    def _configure_ssl(self):
+        """Configure SSL based on the security setting."""
+        if self.use_secure_ssl:
+            try:
+                # Try secure SSL configuration
+                import certifi
+                ca_bundle = certifi.where()
+                os.environ['SSL_CERT_FILE'] = ca_bundle
+                os.environ['REQUESTS_CA_BUNDLE'] = ca_bundle
+                print("✓ Secure SSL configuration applied")
+            except Exception as e:
+                print(f"⚠ Secure SSL failed: {e}, falling back to insecure")
+                self.use_secure_ssl = False
+                self._configure_insecure_ssl()
+        else:
+            self._configure_insecure_ssl()
+    
+    def _configure_insecure_ssl(self):
+        """Configure insecure SSL (development mode)."""
+        import ssl
+        ssl._create_default_https_context = ssl._create_unverified_context
+        
+        # Also set environment variables to ensure all HTTP libraries use insecure SSL
+        os.environ['PYTHONHTTPSVERIFY'] = '0'
+        os.environ['CURL_CA_BUNDLE'] = ''
+        
+        try:
+            import urllib3
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        except ImportError:
+            pass
+        print("⚠ Development SSL mode (insecure) - like your working .NET version")
     
     def _read_keys_from_file(self, filename=r"Appkey.txt"):
         """Read Azure credentials from the Appkey.txt file."""
@@ -147,3 +157,13 @@ class ChatService:
             return result
         except Exception as ex:
             return f"An error occurred: {str(ex)}"
+
+
+# Factory functions for easy use
+def create_secure_chat_service():
+    """Create a ChatService with secure SSL (production mode)."""
+    return ChatService(use_secure_ssl=True)
+
+def create_development_chat_service():
+    """Create a ChatService with insecure SSL (development mode) - works like .NET version."""
+    return ChatService(use_secure_ssl=False)
