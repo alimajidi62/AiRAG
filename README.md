@@ -9,14 +9,13 @@ This repository demonstrates how to build an enterprise-ready AI chatbot using A
 -->
 
 ---
-
 ## 🚀 Overview
 
 **Retrieval-Augmented Generation (RAG)** combines the power of large language models with external data sources. In this repo, Azure Cognitive Search is used to search specific documents and provide relevant context to the AI model for more accurate and grounded answers.  
 **Keywords:** Azure AI, RAG, Cognitive Search, OpenAI, Document Intelligence, PDF OCR, Table Extraction, AI Chatbot, Multi-Agent, Enterprise Search.
 
 ---   
-
+     
 ## 📁 Structure
 
 - **Python:** [`test.py`](test.py)  
@@ -150,7 +149,7 @@ worldwar2-index
 ```
 
 ---
-
+ 
 **Tip:**  
 If you need more help, see the official documentation:  
 - [Azure OpenAI Service documentation](https://learn.microsoft.com/azure/ai-services/openai/)
@@ -430,7 +429,7 @@ For more Azure AI, RAG, Cognitive Search, and Document Intelligence examples, se
 <img width="787" height="851" alt="image" src="https://github.com/user-attachments/assets/d4c67638-d305-4a1b-9e1b-de8c9da3e4dd" />
 
 ---
-
+need to add llm for anlayse the image 
 <!--
 SEO: Azure AI, RAG, Cognitive Search, Document Intelligence, AI Chatbot, Multi-Agent, PDF OCR, Table Extraction, Enterprise Search, OpenAI, Microsoft Azure, AI Example, AI Tutorial, AI Sample Code
 -->
