@@ -1,10 +1,15 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.IO;
 using Newtonsoft.Json;
 using Microsoft.Win32;
 using System.Windows.Media.Imaging;
+using System.Windows.Media;
+using WinFormsColorDialog = System.Windows.Forms.ColorDialog;
+using WinFormsDialogResult = System.Windows.Forms.DialogResult;
+using WpfColor = System.Windows.Media.Color;
 
 namespace chatbot
 {
@@ -22,6 +27,7 @@ namespace chatbot
         private ObservableCollection<HistoryItem> historyItems = new ObservableCollection<HistoryItem>();
         private readonly string historyFile = "chat_history.json";
         private string selectedImagePath = string.Empty;
+        private WpfColor currentBackgroundColor = WpfColor.FromRgb(240, 240, 240); // Default classic gray
 
         public MainWindow()
         {
@@ -29,6 +35,7 @@ namespace chatbot
             chatService = new ChatService();
             HistoryItemsPanel.ItemsSource = historyItems;
             LoadHistory();
+            LoadSavedColorTheme();
         }
         private void QuestionTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
@@ -190,7 +197,222 @@ private void ToggleHistoryButton_Click(object sender, RoutedEventArgs e)
         protected override void OnClosed(System.EventArgs e)
         {
             SaveHistory();
+            SaveColorTheme();
             base.OnClosed(e);
         }
+
+        // Color Theme Methods
+        private void ColorThemeButton_Click(object sender, RoutedEventArgs e)
+        {
+            ColorSelectionPanel.Visibility = ColorSelectionPanel.Visibility == Visibility.Visible 
+                ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private void CloseColorPanelButton_Click(object sender, RoutedEventArgs e)
+        {
+            ColorSelectionPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void ClassicThemeButton_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyColorTheme(WpfColor.FromRgb(240, 240, 240), "Classic");
+        }
+
+        private void BlueThemeButton_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyColorTheme(WpfColor.FromRgb(227, 236, 255), "Blue");
+        }
+
+        private void GreenThemeButton_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyColorTheme(WpfColor.FromRgb(232, 245, 232), "Green");
+        }
+
+        private void PurpleThemeButton_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyColorTheme(WpfColor.FromRgb(243, 232, 255), "Purple");
+        }
+
+        private void OrangeThemeButton_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyColorTheme(WpfColor.FromRgb(255, 244, 230), "Orange");
+        }
+
+        private void DarkThemeButton_Click(object sender, RoutedEventArgs e)
+        {
+            ApplyColorTheme(WpfColor.FromRgb(47, 47, 47), "Dark");
+        }
+
+        private void CustomColorButton_Click(object sender, RoutedEventArgs e)
+        {
+            var colorDialog = new WinFormsColorDialog();
+            if (colorDialog.ShowDialog() == WinFormsDialogResult.OK)
+            {
+                var color = WpfColor.FromRgb(colorDialog.Color.R, colorDialog.Color.G, colorDialog.Color.B);
+                ApplyColorTheme(color, "Custom");
+            }
+        }
+
+        private void ApplyColorTheme(WpfColor backgroundColor, string themeName)
+        {
+            currentBackgroundColor = backgroundColor;
+            
+            // Calculate complementary colors based on background
+            bool isDark = (backgroundColor.R + backgroundColor.G + backgroundColor.B) < 384; // Average < 128
+            
+            WpfColor textColor = isDark ? Colors.White : Colors.Black;
+            WpfColor panelColor = isDark ? 
+                WpfColor.FromRgb((byte)(backgroundColor.R + 30), (byte)(backgroundColor.G + 30), (byte)(backgroundColor.B + 30)) :
+                WpfColor.FromRgb((byte)Math.Max(0, backgroundColor.R - 20), (byte)Math.Max(0, backgroundColor.G - 20), (byte)Math.Max(0, backgroundColor.B - 20));
+            WpfColor borderColor = isDark ? Colors.Gray : WpfColor.FromRgb(128, 128, 128);
+            
+            // Calculate button colors (lighter/darker than background)
+            WpfColor buttonColor = isDark ?
+                WpfColor.FromRgb((byte)Math.Min(255, backgroundColor.R + 40), (byte)Math.Min(255, backgroundColor.G + 40), (byte)Math.Min(255, backgroundColor.B + 40)) :
+                WpfColor.FromRgb((byte)Math.Max(0, backgroundColor.R - 30), (byte)Math.Max(0, backgroundColor.G - 30), (byte)Math.Max(0, backgroundColor.B - 30));
+            
+            // Apply to main window
+            this.Background = new SolidColorBrush(backgroundColor);
+            
+            // Apply to history panel
+            var historyBorder = FindName("HistoryPanelGrid") as Grid;
+            if (historyBorder?.Children[0] is Border historyBorderElement)
+            {
+                historyBorderElement.Background = new SolidColorBrush(panelColor);
+                historyBorderElement.BorderBrush = new SolidColorBrush(borderColor);
+            }
+            
+            // Apply to main chat area
+            var mainChatBorder = (Border)((Grid)this.Content).Children[2];
+            mainChatBorder.Background = new SolidColorBrush(backgroundColor);
+            mainChatBorder.BorderBrush = new SolidColorBrush(borderColor);
+            
+            // Apply to display area
+            var answerTextBlock = FindName("AnswerTextBlock") as FrameworkElement;
+            var displayBorder = answerTextBlock?.Parent;
+            while (displayBorder != null && !(displayBorder is Border))
+                displayBorder = ((FrameworkElement)displayBorder).Parent;
+            
+            if (displayBorder is Border answerBorder)
+            {
+                answerBorder.Background = isDark ? new SolidColorBrush(WpfColor.FromRgb(64, 64, 64)) : Brushes.White;
+                answerBorder.BorderBrush = new SolidColorBrush(borderColor);
+            }
+            
+            // Update text and button colors
+            UpdateTextColors(textColor, isDark);
+            UpdateButtonColors(buttonColor, borderColor, textColor, isDark);
+            
+            // Update color preview
+            ColorPreview.Fill = new SolidColorBrush(backgroundColor);
+            
+            // Close the color panel
+            ColorSelectionPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void UpdateTextColors(WpfColor textColor, bool isDark)
+        {
+            var textBrush = new SolidColorBrush(textColor);
+            
+            // Find and update all TextBlocks
+            UpdateElementTextColor(this, textBrush, isDark);
+        }
+
+        private void UpdateButtonColors(WpfColor buttonColor, WpfColor borderColor, WpfColor textColor, bool isDark)
+        {
+            var buttonBrush = new SolidColorBrush(buttonColor);
+            var borderBrush = new SolidColorBrush(borderColor);
+            var textBrush = new SolidColorBrush(textColor);
+            
+            // Update all buttons
+            UpdateElementButtonColors(this, buttonBrush, borderBrush, textBrush);
+        }
+
+        private void UpdateElementButtonColors(DependencyObject parent, SolidColorBrush buttonBrush, SolidColorBrush borderBrush, SolidColorBrush textBrush)
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                
+                if (child is Button button)
+                {
+                    // Skip color theme buttons in the color picker to keep their preview colors
+                    if (button.Name == "ClassicThemeButton" || button.Name == "BlueThemeButton" || 
+                        button.Name == "GreenThemeButton" || button.Name == "PurpleThemeButton" || 
+                        button.Name == "OrangeThemeButton" || button.Name == "DarkThemeButton")
+                    {
+                        // Only update text color for theme preview buttons
+                        button.Foreground = textBrush;
+                    }
+                    else
+                    {
+                        // Update all other buttons
+                        button.Background = buttonBrush;
+                        button.BorderBrush = borderBrush;
+                        button.Foreground = textBrush;
+                    }
+                }
+                
+                UpdateElementButtonColors(child, buttonBrush, borderBrush, textBrush);
+            }
+        }
+
+        private void UpdateElementTextColor(DependencyObject parent, SolidColorBrush textBrush, bool isDark)
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parent, i);
+                
+                if (child is TextBlock textBlock && 
+                    textBlock.Name != "ImageStatusText") // Keep status text gray
+                {
+                    textBlock.Foreground = textBrush;
+                }
+                else if (child is Button button)
+                {
+                    button.Foreground = textBrush;
+                }
+                
+                UpdateElementTextColor(child, textBrush, isDark);
+            }
+        }
+
+        private void SaveColorTheme()
+        {
+            try
+            {
+                var colorData = new
+                {
+                    R = currentBackgroundColor.R,
+                    G = currentBackgroundColor.G,
+                    B = currentBackgroundColor.B
+                };
+                var json = JsonConvert.SerializeObject(colorData);
+                File.WriteAllText("color_theme.json", json);
+            }
+            catch
+            {
+                // Ignore save errors
+            }
+        }
+
+        private void LoadSavedColorTheme()
+        {
+            try
+            {
+                if (File.Exists("color_theme.json"))
+                {
+                    var json = File.ReadAllText("color_theme.json");
+                    var colorData = JsonConvert.DeserializeAnonymousType(json, new { R = (byte)0, G = (byte)0, B = (byte)0 });
+                    var savedColor = WpfColor.FromRgb(colorData.R, colorData.G, colorData.B);
+                    ApplyColorTheme(savedColor, "Saved");
+                }
+            }
+            catch
+            {
+                // Use default theme if loading fails
+            }
+        }
+        
     }
 }

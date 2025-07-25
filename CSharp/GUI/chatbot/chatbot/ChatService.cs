@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using Azure;
 using Azure.AI.OpenAI;
 using Azure.Search.Documents;
@@ -9,6 +11,7 @@ using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using System.Text;
 using System.Linq;
+using System.Threading.Tasks;
 using BinaryData = System.BinaryData;
 
 namespace chatbot

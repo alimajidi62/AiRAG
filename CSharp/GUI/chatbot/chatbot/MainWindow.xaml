@@ -3,25 +3,92 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     Title="Chatbot" Height="700" Width="800"
     WindowStartupLocation="CenterScreen"
-    Background="#F5F8FF">
+    Background="#F0F0F0">
     <!-- Root Grid for the entire window -->
     <Grid>
         <!-- Toggle History Button -->
         <!-- This button allows the user to toggle the visibility of the history panel -->
         <Button x:Name="ToggleHistoryButton"
             Content="Hide History"
-            Background="#2563EB"
-            Foreground="White"
-            FontWeight="Bold"
+            Background="#E1E1E1"
+            Foreground="#000000"
+            FontWeight="Normal"
             FontSize="14"
             Padding="8,4"
             Margin="24,24,0,0"
-            BorderThickness="0"
+            BorderThickness="1"
+            BorderBrush="#A0A0A0"
             Cursor="Hand"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Click="ToggleHistoryButton_Click"
             Panel.ZIndex="100" />
+
+        <!-- Color Theme Button -->
+        <Button x:Name="ColorThemeButton"
+            Content="🎨 Colors"
+            Background="#E1E1E1"
+            Foreground="#000000"
+            FontWeight="Normal"
+            FontSize="14"
+            Padding="8,4"
+            Margin="150,24,0,0"
+            BorderThickness="1"
+            BorderBrush="#A0A0A0"
+            Cursor="Hand"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Click="ColorThemeButton_Click"
+            Panel.ZIndex="100" />
+
+        <!-- Color Selection Panel -->
+        <Border x:Name="ColorSelectionPanel" 
+                Background="#F0F0F0" 
+                BorderBrush="#808080" 
+                BorderThickness="2" 
+                CornerRadius="5" 
+                Padding="15"
+                Margin="150,60,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Visibility="Collapsed"
+                Panel.ZIndex="200">
+            <StackPanel>
+                <TextBlock Text="Choose Color Theme:" FontWeight="Bold" Margin="0,0,0,10" />
+                
+                <!-- Predefined Color Themes -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <Button Name="ClassicThemeButton" Content="Classic" Background="#F0F0F0" 
+                            Width="70" Height="30" Margin="0,0,5,0" Click="ClassicThemeButton_Click" />
+                    <Button Name="BlueThemeButton" Content="Blue" Background="#E3ECFF" 
+                            Width="70" Height="30" Margin="0,0,5,0" Click="BlueThemeButton_Click" />
+                    <Button Name="GreenThemeButton" Content="Green" Background="#E8F5E8" 
+                            Width="70" Height="30" Margin="0,0,5,0" Click="GreenThemeButton_Click" />
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <Button Name="PurpleThemeButton" Content="Purple" Background="#F3E8FF" 
+                            Width="70" Height="30" Margin="0,0,5,0" Click="PurpleThemeButton_Click" />
+                    <Button Name="OrangeThemeButton" Content="Orange" Background="#FFF4E6" 
+                            Width="70" Height="30" Margin="0,0,5,0" Click="OrangeThemeButton_Click" />
+                    <Button Name="DarkThemeButton" Content="Dark" Background="#2F2F2F" Foreground="White"
+                            Width="70" Height="30" Margin="0,0,5,0" Click="DarkThemeButton_Click" />
+                </StackPanel>
+                
+                <!-- Custom Color Selection -->
+                <TextBlock Text="Custom Colors:" FontWeight="Bold" Margin="0,10,0,5" />
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <Button Name="CustomColorButton" Content="Pick Color" 
+                            Width="100" Height="30" Margin="0,0,10,0" Click="CustomColorButton_Click" />
+                    <Rectangle Name="ColorPreview" Width="30" Height="30" Fill="#F0F0F0" 
+                               Stroke="#808080" StrokeThickness="1" />
+                </StackPanel>
+                
+                <!-- Close Button -->
+                <Button Name="CloseColorPanelButton" Content="Close" Width="80" Height="25" 
+                        HorizontalAlignment="Right" Click="CloseColorPanelButton_Click" />
+            </StackPanel>
+        </Border>
 
         <!-- Main layout grid -->
         <!-- This grid divides the window into two columns: History and Main Chat Area -->
@@ -36,7 +103,7 @@
             <!-- History Panel -->
             <!-- This grid contains the history panel where previous questions are displayed -->
             <Grid Grid.Column="0" x:Name="HistoryPanelGrid">
-                <Border Background="#E3ECFF" Padding="16" Margin="0,40,0,24" CornerRadius="12">
+                <Border Background="#E0E0E0" Padding="16" Margin="0,40,0,24" CornerRadius="0" BorderBrush="#808080" BorderThickness="1">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -46,18 +113,19 @@
                         
                         <!-- Title for the history panel -->
                         <TextBlock Text="History" FontSize="20" FontWeight="Bold"
-                            Foreground="#1B3A7A" Margin="0,0,0,16" Grid.Row="0" />
+                            Foreground="#000000" Margin="0,0,0,16" Grid.Row="0" />
                         
                         <!-- Button to clear the history -->
                         <Button Name="ClearHistoryButton"
                             Content="Clear History"
-                            Background="#2563EB"
-                            Foreground="White"
-                            FontWeight="Bold"
+                            Background="#E1E1E1"
+                            Foreground="#000000"
+                            FontWeight="Normal"
                             FontSize="14"
                             Padding="8,4"
                             Margin="0,0,0,16"
-                            BorderThickness="0"
+                            BorderThickness="1"
+                            BorderBrush="#A0A0A0"
                             Cursor="Hand"
                             Click="ClearHistoryButton_Click" 
                             Grid.Row="1" />
@@ -71,19 +139,19 @@
                                         <Button Margin="0,0,0,8"
                                             Padding="8"
                                             Background="#FFFFFF"
-                                            Foreground="#1B3A7A"
-                                            BorderBrush="#3B82F6"
+                                            Foreground="#000000"
+                                            BorderBrush="#808080"
                                             BorderThickness="1"
                                             HorizontalContentAlignment="Left"
                                             Cursor="Hand"
                                             Click="HistoryButton_Click"
-                                            FontWeight="SemiBold"
+                                            FontWeight="Normal"
                                             FontSize="14">
                                             <StackPanel>
                                                 <TextBlock Text="{Binding Question}" TextWrapping="Wrap" />
                                                 <TextBlock Text="📷 Has Image" 
                                                           FontSize="12" 
-                                                          Foreground="#10B981" 
+                                                          Foreground="#006400" 
                                                           Margin="0,4,0,0">
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
@@ -108,7 +176,7 @@
 
             <!-- Main Chat Area -->
             <!-- This section contains the main chat interface -->
-            <Border Grid.Column="1" CornerRadius="16" Padding="32" Background="#FFFFFF" Margin="24">
+            <Border Grid.Column="1" CornerRadius="0" Padding="32" Background="#F0F0F0" Margin="24" BorderBrush="#808080" BorderThickness="1">
                 <Grid>
                     <Grid.RowDefinitions>
                         <!-- Title row -->
@@ -120,7 +188,7 @@
                     </Grid.RowDefinitions>
                     <!-- Title for the chatbot -->
                     <TextBlock Text="AI Chatbot" FontSize="32" FontWeight="Bold"
-                        Foreground="#2563EB"
+                        Foreground="#000000"
                         Margin="0,0,0,24" HorizontalAlignment="Center" Grid.Row="0" />
                     <!-- Input area for questions -->
                     <StackPanel Grid.Row="1" Margin="0,0,0,16">
@@ -130,9 +198,10 @@
                                 Content="📷 Select Image"
                                 MinHeight="35"
                                 FontSize="14"
-                                Background="#10B981"
-                                Foreground="White"
-                                BorderThickness="0"
+                                Background="#E1E1E1"
+                                Foreground="#000000"
+                                BorderThickness="1"
+                                BorderBrush="#A0A0A0"
                                 Padding="12,0"
                                 Cursor="Hand"
                                 Click="SelectImageButton_Click"
@@ -141,9 +210,10 @@
                                 Content="❌ Clear"
                                 MinHeight="35"
                                 FontSize="14"
-                                Background="#EF4444"
-                                Foreground="White"
-                                BorderThickness="0"
+                                Background="#E1E1E1"
+                                Foreground="#000000"
+                                BorderThickness="1"
+                                BorderBrush="#A0A0A0"
                                 Padding="12,0"
                                 Cursor="Hand"
                                 Click="ClearImageButton_Click"
@@ -154,7 +224,7 @@
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                             <TextBlock Name="ImageStatusText"
                                 FontSize="12"
-                                Foreground="#6B7280"
+                                Foreground="#808080"
                                 Visibility="Collapsed"
                                 Margin="0,0,8,0" />
                         </StackPanel>
@@ -173,10 +243,10 @@
                                 MinHeight="40"
                                 FontSize="16"
                                 Padding="10"
-                                Background="#F0F6FF"
-                                Foreground="#1B3A7A"
-                                BorderBrush="#3B82F6"
-                                BorderThickness="2"
+                                Background="#FFFFFF"
+                                Foreground="#000000"
+                                BorderBrush="#808080"
+                                BorderThickness="1"
                                 VerticalContentAlignment="Center"
                                 ToolTip="Type your question here..."
                                 KeyDown="QuestionTextBox_KeyDown"
@@ -187,49 +257,46 @@
                                 Content="Ask"
                                 MinHeight="40"
                                 FontSize="16"
-                                Background="#2563EB"
-                                Foreground="White"
-                                BorderThickness="0"
+                                Background="#E1E1E1"
+                                Foreground="#000000"
+                                BorderThickness="1"
+                                BorderBrush="#A0A0A0"
                                 Padding="18,0"
                                 Cursor="Hand"
                                 Click="AskButton_Click"
                                 Width="80">
-                                <Button.Effect>
-                                    <!-- Drop shadow effect for the button -->
-                                    <DropShadowEffect Color="#3B82F6" BlurRadius="8" ShadowDepth="2" />
-                                </Button.Effect>
                             </Button>
                         </StackPanel>
                     </StackPanel>
                     <!-- Display area for the question and answer -->
-                    <Border Background="#E3ECFF" CornerRadius="8" Padding="16" Grid.Row="2"
-                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                    <Border Background="#FFFFFF" CornerRadius="0" Padding="16" Grid.Row="2"
+                        VerticalAlignment="Stretch" HorizontalAlignment="Stretch" BorderBrush="#808080" BorderThickness="1">
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel>
                                 <!-- Displayed question -->
-                                <TextBlock Text="Question:" FontWeight="Bold" Foreground="#2563EB"
+                                <TextBlock Text="Question:" FontWeight="Bold" Foreground="#000000"
                                     Margin="0,0,0,4" FontSize="16" />
                                 <TextBlock Name="DisplayedQuestionTextBlock"
                                     FontSize="15"
-                                    Foreground="#1B3A7A"
+                                    Foreground="#000000"
                                     TextWrapping="Wrap"
                                     Margin="0,0,0,12" />
                                 <!-- Displayed answer -->
-                                <TextBlock Text="Answer:" FontWeight="Bold" Foreground="#2563EB"
+                                <TextBlock Text="Answer:" FontWeight="Bold" Foreground="#000000"
                                     Margin="0,0,0,4" FontSize="16" />
                                 <TextBlock Name="AnswerTextBlock"
                                     FontSize="18"
-                                    Foreground="#1B3A7A"
+                                    Foreground="#000000"
                                     TextWrapping="Wrap" />
                             </StackPanel>
                         </ScrollViewer>
                     </Border>
                     <!-- Spinner overlay for loading state -->
-                    <Grid x:Name="SpinnerOverlay" Visibility="Collapsed" Background="#80FFFFFF"
+                    <Grid x:Name="SpinnerOverlay" Visibility="Collapsed" Background="#80F0F0F0"
                         Grid.RowSpan="3" Panel.ZIndex="999">
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                             <!-- Rotating spinner -->
-                            <Ellipse Width="10" Height="10" Stroke="#2563EB" StrokeThickness="6">
+                            <Ellipse Width="10" Height="10" Stroke="#000000" StrokeThickness="6">
                                 <Ellipse.RenderTransform>
                                     <RotateTransform x:Name="SpinnerRotate" Angle="0" />
                                 </Ellipse.RenderTransform>
@@ -247,7 +314,7 @@
                                 </Ellipse.Triggers>
                             </Ellipse>
                             <!-- Loading message -->
-                            <TextBlock Text="Waiting for response..." Foreground="#2563EB"
+                            <TextBlock Text="Waiting for response..." Foreground="#000000"
                                 FontWeight="Bold" FontSize="16" Margin="0,16,0,0"
                                 HorizontalAlignment="Center" />
                         </StackPanel>
