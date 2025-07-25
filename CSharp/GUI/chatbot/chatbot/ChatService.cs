@@ -27,20 +27,13 @@ namespace chatbot
 
         public ChatService()
         {
-            //string[] lines = File.ReadAllLines("../../../../../../../Appkey.txt");
-
-            string inputPath = "../../../../../../../Appkey.bin";
-
-
+            string inputPath = "Appkey.bin";
             int seed = 12345;
-
             byte[] shuffled = File.ReadAllBytes(inputPath);
-
             // Generate same shuffle order
             int[] indices = Enumerable.Range(0, shuffled.Length).ToArray();
             Random rng = new Random(seed);
             indices = indices.OrderBy(_ => rng.Next()).ToArray();
-
             // Reverse shuffle
             byte[] originalBytes = new byte[shuffled.Length];
             for (int i = 0; i < shuffled.Length; i++)
@@ -48,8 +41,6 @@ namespace chatbot
 
             string content = Encoding.UTF8.GetString(originalBytes);
             var lines = content.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-
-
             endpoint = lines[0].Trim();
             apiKey = lines[1].Trim();
             searchKey = lines[2].Trim();
@@ -57,10 +48,8 @@ namespace chatbot
             indexName = lines[4].Trim();
             docIntelligenceEndpoint = lines.Length > 5 ? lines[5].Trim() : "";
             docIntelligenceKey = lines.Length > 6 ? lines[6].Trim() : "";
-
             var credential = new AzureKeyCredential(apiKey);
             var searchCredential = new AzureKeyCredential(searchKey);
-
             searchClient = new SearchClient(new Uri(searchEndpoint), indexName, searchCredential);
             var azureClient = new AzureOpenAIClient(new Uri(endpoint), credential);
             chatClient = azureClient.GetChatClient("gpt-4.1");
