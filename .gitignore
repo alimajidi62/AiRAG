@@ -9,3 +9,5 @@ bin
 obj
 .vs
 __pycache__
+CSharp/DoNotCommitThis
+Appkey.bin

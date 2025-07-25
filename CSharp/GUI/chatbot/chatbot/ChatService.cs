@@ -8,6 +8,7 @@ using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using System.Text;
+using System.Linq;
 
 namespace chatbot
 {
@@ -26,7 +27,29 @@ namespace chatbot
 
         public ChatService()
         {
-            string[] lines = File.ReadAllLines("../../../../../../../Appkey.txt");
+            //string[] lines = File.ReadAllLines("../../../../../../../Appkey.txt");
+
+            string inputPath = "../../../../../../../Appkey.bin";
+
+
+            int seed = 12345;
+
+            byte[] shuffled = File.ReadAllBytes(inputPath);
+
+            // Generate same shuffle order
+            int[] indices = Enumerable.Range(0, shuffled.Length).ToArray();
+            Random rng = new Random(seed);
+            indices = indices.OrderBy(_ => rng.Next()).ToArray();
+
+            // Reverse shuffle
+            byte[] originalBytes = new byte[shuffled.Length];
+            for (int i = 0; i < shuffled.Length; i++)
+                originalBytes[indices[i]] = shuffled[i];
+
+            string content = Encoding.UTF8.GetString(originalBytes);
+            var lines = content.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+
             endpoint = lines[0].Trim();
             apiKey = lines[1].Trim();
             searchKey = lines[2].Trim();
