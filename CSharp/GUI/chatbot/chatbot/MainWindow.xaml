@@ -59,8 +59,7 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <!-- Each history item is displayed as a button -->
-                                        <Button Content="{Binding Question}"
-                                            Margin="0,0,0,8"
+                                        <Button Margin="0,0,0,8"
                                             Padding="8"
                                             Background="#FFFFFF"
                                             Foreground="#1B3A7A"
@@ -70,7 +69,26 @@
                                             Cursor="Hand"
                                             Click="HistoryButton_Click"
                                             FontWeight="SemiBold"
-                                            FontSize="14" />
+                                            FontSize="14">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Question}" TextWrapping="Wrap" />
+                                                <TextBlock Text="📷 Has Image" 
+                                                          FontSize="12" 
+                                                          Foreground="#10B981" 
+                                                          Margin="0,4,0,0">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding HasImage}" Value="True">
+                                                                    <Setter Property="Visibility" Value="Visible" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </Button>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
@@ -96,38 +114,83 @@
                         Foreground="#2563EB"
                         Margin="0,0,0,24" HorizontalAlignment="Center" Grid.Row="0" />
                     <!-- Input area for questions -->
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,16">
-                        <!-- TextBox for user input -->
-                        <TextBox Name="QuestionTextBox"
-                            MinHeight="40"
-                            FontSize="16"
-                            Padding="10"
-                            Background="#F0F6FF"
-                            Foreground="#1B3A7A"
-                            BorderBrush="#3B82F6"
-                            BorderThickness="2"
-                            VerticalContentAlignment="Center"
-                            ToolTip="Type your question here..."
-                            KeyDown="QuestionTextBox_KeyDown"
-                            Width="260"
-                            Margin="0,0,8,0" />
-                        <!-- Button to submit the question -->
-                        <Button Name="AskButton"
-                            Content="Ask"
-                            MinHeight="40"
-                            FontSize="16"
-                            Background="#2563EB"
-                            Foreground="White"
-                            BorderThickness="0"
-                            Padding="18,0"
-                            Cursor="Hand"
-                            Click="AskButton_Click"
-                            Width="80">
-                            <Button.Effect>
-                                <!-- Drop shadow effect for the button -->
-                                <DropShadowEffect Color="#3B82F6" BlurRadius="8" ShadowDepth="2" />
-                            </Button.Effect>
-                        </Button>
+                    <StackPanel Grid.Row="1" Margin="0,0,0,16">
+                        <!-- Image selection area -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <Button Name="SelectImageButton"
+                                Content="📷 Select Image"
+                                MinHeight="35"
+                                FontSize="14"
+                                Background="#10B981"
+                                Foreground="White"
+                                BorderThickness="0"
+                                Padding="12,0"
+                                Cursor="Hand"
+                                Click="SelectImageButton_Click"
+                                Margin="0,0,8,0" />
+                            <Button Name="ClearImageButton"
+                                Content="❌ Clear"
+                                MinHeight="35"
+                                FontSize="14"
+                                Background="#EF4444"
+                                Foreground="White"
+                                BorderThickness="0"
+                                Padding="12,0"
+                                Cursor="Hand"
+                                Click="ClearImageButton_Click"
+                                Visibility="Collapsed" />
+                        </StackPanel>
+                        
+                        <!-- Image status and display -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <TextBlock Name="ImageStatusText"
+                                FontSize="12"
+                                Foreground="#6B7280"
+                                Visibility="Collapsed"
+                                Margin="0,0,8,0" />
+                        </StackPanel>
+                        
+                        <Image Name="SelectedImageDisplay"
+                            MaxHeight="150"
+                            MaxWidth="200"
+                            Margin="0,0,0,8"
+                            HorizontalAlignment="Left"
+                            Visibility="Collapsed" />
+                        
+                        <!-- Text input and ask button -->
+                        <StackPanel Orientation="Horizontal">
+                            <!-- TextBox for user input -->
+                            <TextBox Name="QuestionTextBox"
+                                MinHeight="40"
+                                FontSize="16"
+                                Padding="10"
+                                Background="#F0F6FF"
+                                Foreground="#1B3A7A"
+                                BorderBrush="#3B82F6"
+                                BorderThickness="2"
+                                VerticalContentAlignment="Center"
+                                ToolTip="Type your question here..."
+                                KeyDown="QuestionTextBox_KeyDown"
+                                Width="260"
+                                Margin="0,0,8,0" />
+                            <!-- Button to submit the question -->
+                            <Button Name="AskButton"
+                                Content="Ask"
+                                MinHeight="40"
+                                FontSize="16"
+                                Background="#2563EB"
+                                Foreground="White"
+                                BorderThickness="0"
+                                Padding="18,0"
+                                Cursor="Hand"
+                                Click="AskButton_Click"
+                                Width="80">
+                                <Button.Effect>
+                                    <!-- Drop shadow effect for the button -->
+                                    <DropShadowEffect Color="#3B82F6" BlurRadius="8" ShadowDepth="2" />
+                                </Button.Effect>
+                            </Button>
+                        </StackPanel>
                     </StackPanel>
                     <!-- Display area for the question and answer -->
                     <Border Background="#E3ECFF" CornerRadius="8" Padding="16" Grid.Row="2"

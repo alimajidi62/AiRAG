@@ -9,6 +9,7 @@ using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using System.Text;
 using System.Linq;
+using BinaryData = System.BinaryData;
 
 namespace chatbot
 {
@@ -94,6 +95,81 @@ namespace chatbot
             {
                 return $"An error occurred: {ex.Message}";
             }
+        }
+
+        public async Task<string> AskQuestionWithImageAsync(string userQuestion, string imagePath)
+        {
+            try
+            {
+                // Read image file
+                byte[] imageBytes = await File.ReadAllBytesAsync(imagePath);
+                string mimeType = GetMimeType(imagePath);
+
+                // Step 1: Search your index if there's a text question
+                string context = "";
+                if (!string.IsNullOrWhiteSpace(userQuestion))
+                {
+                    var searchResults = await searchClient.SearchAsync<SearchDocument>(userQuestion, new SearchOptions { Size = 5 });
+                    var contextBuilder = new StringBuilder();
+                    await foreach (var result in searchResults.Value.GetResultsAsync())
+                    {
+                        if (result.Document.TryGetValue("content", out var content))
+                        {
+                            contextBuilder.AppendLine(content.ToString());
+                        }
+                    }
+                    context = contextBuilder.ToString();
+                }
+
+                // Step 2: Create message with image
+                var messageContentParts = new List<ChatMessageContentPart>();
+
+                // Add text part
+                string promptText = !string.IsNullOrWhiteSpace(context) 
+                    ? $"Context:\n{context}\n\nQuestion: {userQuestion}\n\nPlease analyze the image and answer based on both the context and what you see in the image."
+                    : !string.IsNullOrWhiteSpace(userQuestion) 
+                        ? $"Question: {userQuestion}\n\nPlease analyze the image and answer the question."
+                        : "Please analyze and describe what you see in this image.";
+
+                messageContentParts.Add(ChatMessageContentPart.CreateTextPart(promptText));
+
+                // Add image part
+                messageContentParts.Add(ChatMessageContentPart.CreateImagePart(
+                    BinaryData.FromBytes(imageBytes), mimeType));
+
+                var messages = new List<ChatMessage>
+                {
+                    new SystemChatMessage("You are a helpful assistant that can analyze images and answer questions. Use the provided context if available, and describe what you see in the image."),
+                    new UserChatMessage(messageContentParts)
+                };
+
+                var options = new ChatCompletionOptions
+                {
+                    Temperature = 0.7f,
+                    MaxOutputTokenCount = 800
+                };
+
+                ChatCompletion completion = await chatClient.CompleteChatAsync(messages, options);
+                return completion.Content?[0]?.Text ?? "No answer returned.";
+            }
+            catch (Exception ex)
+            {
+                return $"An error occurred while processing the image: {ex.Message}";
+            }
+        }
+
+        private string GetMimeType(string filePath)
+        {
+            string extension = Path.GetExtension(filePath).ToLowerInvariant();
+            return extension switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                ".bmp" => "image/bmp",
+                ".webp" => "image/webp",
+                _ => "image/jpeg" // Default fallback
+            };
         }
     }
 }
