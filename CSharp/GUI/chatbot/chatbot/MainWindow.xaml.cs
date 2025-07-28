@@ -36,6 +36,10 @@ namespace chatbot
             HistoryItemsPanel.ItemsSource = historyItems;
             LoadHistory();
             LoadSavedColorTheme();
+            
+            // Wire up events for the ColorSelectionControl
+            ColorSelectionPanel.ColorThemeSelected += ColorSelectionPanel_ColorThemeSelected;
+            ColorSelectionPanel.ColorPanelCloseRequested += ColorSelectionPanel_ColorPanelCloseRequested;
         }
         private void QuestionTextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
@@ -208,49 +212,14 @@ private void ToggleHistoryButton_Click(object sender, RoutedEventArgs e)
                 ? Visibility.Collapsed : Visibility.Visible;
         }
 
-        private void CloseColorPanelButton_Click(object sender, RoutedEventArgs e)
+        private void ColorSelectionPanel_ColorThemeSelected(object sender, ColorThemeSelectedEventArgs e)
+        {
+            ApplyColorTheme(e.SelectedColor, e.ThemeName);
+        }
+
+        private void ColorSelectionPanel_ColorPanelCloseRequested(object sender, EventArgs e)
         {
             ColorSelectionPanel.Visibility = Visibility.Collapsed;
-        }
-
-        private void ClassicThemeButton_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyColorTheme(WpfColor.FromRgb(240, 240, 240), "Classic");
-        }
-
-        private void BlueThemeButton_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyColorTheme(WpfColor.FromRgb(227, 236, 255), "Blue");
-        }
-
-        private void GreenThemeButton_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyColorTheme(WpfColor.FromRgb(232, 245, 232), "Green");
-        }
-
-        private void PurpleThemeButton_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyColorTheme(WpfColor.FromRgb(243, 232, 255), "Purple");
-        }
-
-        private void OrangeThemeButton_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyColorTheme(WpfColor.FromRgb(255, 244, 230), "Orange");
-        }
-
-        private void DarkThemeButton_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyColorTheme(WpfColor.FromRgb(47, 47, 47), "Dark");
-        }
-
-        private void CustomColorButton_Click(object sender, RoutedEventArgs e)
-        {
-            var colorDialog = new WinFormsColorDialog();
-            if (colorDialog.ShowDialog() == WinFormsDialogResult.OK)
-            {
-                var color = WpfColor.FromRgb(colorDialog.Color.R, colorDialog.Color.G, colorDialog.Color.B);
-                ApplyColorTheme(color, "Custom");
-            }
         }
 
         private void ApplyColorTheme(WpfColor backgroundColor, string themeName)
@@ -282,10 +251,21 @@ private void ToggleHistoryButton_Click(object sender, RoutedEventArgs e)
                 historyBorderElement.BorderBrush = new SolidColorBrush(borderColor);
             }
             
-            // Apply to main chat area
-            var mainChatBorder = (Border)((Grid)this.Content).Children[2];
-            mainChatBorder.Background = new SolidColorBrush(backgroundColor);
-            mainChatBorder.BorderBrush = new SolidColorBrush(borderColor);
+            // Apply to main chat area - find it more safely
+            var mainGrid = this.Content as Grid;
+            if (mainGrid != null)
+            {
+                foreach (var child in mainGrid.Children)
+                {
+                    if (child is Border border && border.Name != "HistoryPanelGrid")
+                    {
+                        // This should be the main chat border
+                        border.Background = new SolidColorBrush(backgroundColor);
+                        border.BorderBrush = new SolidColorBrush(borderColor);
+                        break;
+                    }
+                }
+            }
             
             // Apply to display area
             var answerTextBlock = FindName("AnswerTextBlock") as FrameworkElement;
@@ -302,9 +282,6 @@ private void ToggleHistoryButton_Click(object sender, RoutedEventArgs e)
             // Update text and button colors
             UpdateTextColors(textColor, isDark);
             UpdateButtonColors(buttonColor, borderColor, textColor, isDark);
-            
-            // Update color preview
-            ColorPreview.Fill = new SolidColorBrush(backgroundColor);
             
             // Close the color panel
             ColorSelectionPanel.Visibility = Visibility.Collapsed;

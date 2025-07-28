@@ -1,6 +1,7 @@
 ﻿<Window x:Class="chatbot.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:chatbot"
     Title="Chatbot" Height="700" Width="800"
     WindowStartupLocation="CenterScreen"
     Background="#F0F0F0">
@@ -42,53 +43,14 @@
             Panel.ZIndex="100" />
 
         <!-- Color Selection Panel -->
-        <Border x:Name="ColorSelectionPanel" 
-                Background="#F0F0F0" 
-                BorderBrush="#808080" 
-                BorderThickness="2" 
-                CornerRadius="5" 
-                Padding="15"
-                Margin="150,60,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Visibility="Collapsed"
-                Panel.ZIndex="200">
-            <StackPanel>
-                <TextBlock Text="Choose Color Theme:" FontWeight="Bold" Margin="0,0,0,10" />
-                
-                <!-- Predefined Color Themes -->
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                    <Button Name="ClassicThemeButton" Content="Classic" Background="#F0F0F0" 
-                            Width="70" Height="30" Margin="0,0,5,0" Click="ClassicThemeButton_Click" />
-                    <Button Name="BlueThemeButton" Content="Blue" Background="#E3ECFF" 
-                            Width="70" Height="30" Margin="0,0,5,0" Click="BlueThemeButton_Click" />
-                    <Button Name="GreenThemeButton" Content="Green" Background="#E8F5E8" 
-                            Width="70" Height="30" Margin="0,0,5,0" Click="GreenThemeButton_Click" />
-                </StackPanel>
-                
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                    <Button Name="PurpleThemeButton" Content="Purple" Background="#F3E8FF" 
-                            Width="70" Height="30" Margin="0,0,5,0" Click="PurpleThemeButton_Click" />
-                    <Button Name="OrangeThemeButton" Content="Orange" Background="#FFF4E6" 
-                            Width="70" Height="30" Margin="0,0,5,0" Click="OrangeThemeButton_Click" />
-                    <Button Name="DarkThemeButton" Content="Dark" Background="#2F2F2F" Foreground="White"
-                            Width="70" Height="30" Margin="0,0,5,0" Click="DarkThemeButton_Click" />
-                </StackPanel>
-                
-                <!-- Custom Color Selection -->
-                <TextBlock Text="Custom Colors:" FontWeight="Bold" Margin="0,10,0,5" />
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                    <Button Name="CustomColorButton" Content="Pick Color" 
-                            Width="100" Height="30" Margin="0,0,10,0" Click="CustomColorButton_Click" />
-                    <Rectangle Name="ColorPreview" Width="30" Height="30" Fill="#F0F0F0" 
-                               Stroke="#808080" StrokeThickness="1" />
-                </StackPanel>
-                
-                <!-- Close Button -->
-                <Button Name="CloseColorPanelButton" Content="Close" Width="80" Height="25" 
-                        HorizontalAlignment="Right" Click="CloseColorPanelButton_Click" />
-            </StackPanel>
-        </Border>
+        <local:ColorSelectionControl x:Name="ColorSelectionPanel"
+                                   Margin="150,60,0,0"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top"
+                                   Visibility="Collapsed"
+                                   Panel.ZIndex="200"
+                                   ColorThemeSelected="ColorSelectionPanel_ColorThemeSelected"
+                                   ColorPanelCloseRequested="ColorSelectionPanel_ColorPanelCloseRequested" />
 
         <!-- Main layout grid -->
         <!-- This grid divides the window into two columns: History and Main Chat Area -->
