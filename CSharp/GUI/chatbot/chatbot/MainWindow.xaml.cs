@@ -28,7 +28,6 @@ namespace chatbot
     public partial class MainWindow : Window
     {
         private ChatService chatService;
-        private ObservableCollection<HistoryItem> historyItems = new ObservableCollection<HistoryItem>();
         private ObservableCollection<DocumentInfo> documentItems = new ObservableCollection<DocumentInfo>();
         private readonly string historyFile = "chat_history.json";
         private string selectedImagePath = string.Empty;
@@ -38,15 +37,17 @@ namespace chatbot
         {
             InitializeComponent();
             chatService = new ChatService();
-            HistoryItemsPanel.ItemsSource = historyItems;
             DocumentItemsControl.ItemsSource = documentItems;
-            LoadHistory();
             LoadSavedColorTheme();
             LoadDocumentList();
             
             // Wire up events for the ColorSelectionControl
             ColorSelectionPanel.ColorThemeSelected += ColorSelectionPanel_ColorThemeSelected;
             ColorSelectionPanel.ColorPanelCloseRequested += ColorSelectionPanel_ColorPanelCloseRequested;
+            
+            // Wire up events for the HistoryControl
+            HistoryPanel.HistoryItemSelected += HistoryPanel_HistoryItemSelected;
+            HistoryPanel.HistoryCleared += HistoryPanel_HistoryCleared;
         }
 
         private void SetAnswerText(string text)
@@ -244,51 +245,51 @@ namespace chatbot
             AskButton.IsEnabled = true;
 
             // Add to history
-            historyItems.Insert(0, new HistoryItem { 
+            HistoryPanel.AddHistoryItem(new HistoryItem { 
                 Question = question, 
                 Answer = answer, 
                 ImagePath = selectedImagePath 
             });
-            SaveHistory();
 
             // Clear inputs
             QuestionTextBox.Clear();
             ClearSelectedImage();
         }
 
+        // History Control Event Handlers
+        private void HistoryPanel_HistoryItemSelected(object sender, HistoryItemSelectedEventArgs e)
+        {
+            var item = e.SelectedItem;
+            QuestionTextBox.Text = item.Question;
+            SetAnswerText(item.Answer);
+            DisplayedQuestionTextBox.Text = item.Question;
+            
+            // Handle image if present
+            if (item.HasImage && File.Exists(item.ImagePath))
+            {
+                selectedImagePath = item.ImagePath;
+                DisplaySelectedImage();
+            }
+            else
+            {
+                ClearSelectedImage();
+            }
+        }
+
+        private void HistoryPanel_HistoryCleared(object sender, EventArgs e)
+        {
+            // Additional cleanup if needed when history is cleared
+        }
+
         private void HistoryButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.DataContext is HistoryItem item)
-            {
-                QuestionTextBox.Text = item.Question;
-                SetAnswerText(item.Answer);
-                DisplayedQuestionTextBox.Text = item.Question;
-                
-                // Handle image if present
-                if (item.HasImage && File.Exists(item.ImagePath))
-                {
-                    selectedImagePath = item.ImagePath;
-                    DisplaySelectedImage();
-                }
-                else
-                {
-                    ClearSelectedImage();
-                }
-            }
+            // This method is now handled by HistoryPanel_HistoryItemSelected
+            // Keeping for backward compatibility, but functionality moved to HistoryControl
         }
 
         private void LoadHistory()
         {
-            if (File.Exists(historyFile))
-            {
-                var json = File.ReadAllText(historyFile);
-                var items = JsonConvert.DeserializeObject<ObservableCollection<HistoryItem>>(json);
-                if (items != null)
-                {
-                    foreach (var item in items)
-                        historyItems.Add(item);
-                }
-            }
+            // History loading is now handled by HistoryControl
         }
 private void ToggleHistoryButton_Click(object sender, RoutedEventArgs e)
 {
@@ -309,8 +310,8 @@ private void ToggleHistoryButton_Click(object sender, RoutedEventArgs e)
 }
         private void ClearHistoryButton_Click(object sender, RoutedEventArgs e)
         {
-            historyItems.Clear();
-            SaveHistory(); // If you have a SaveHistory method for persistence
+            // This method is now handled by HistoryControl
+            // Keeping for backward compatibility, but functionality moved to HistoryControl
         }
 
         private void SelectImageButton_Click(object sender, RoutedEventArgs e)
@@ -359,15 +360,10 @@ private void ToggleHistoryButton_Click(object sender, RoutedEventArgs e)
             ClearImageButton.Visibility = Visibility.Collapsed;
             ImageStatusText.Visibility = Visibility.Collapsed;
         }
-        private void SaveHistory()
-        {
-            var json = JsonConvert.SerializeObject(historyItems);
-            File.WriteAllText(historyFile, json);
-        }
 
         protected override void OnClosed(System.EventArgs e)
         {
-            SaveHistory();
+            HistoryPanel.SaveHistory();
             SaveColorTheme();
             base.OnClosed(e);
         }
@@ -411,12 +407,8 @@ private void ToggleHistoryButton_Click(object sender, RoutedEventArgs e)
             this.Background = new SolidColorBrush(backgroundColor);
             
             // Apply to history panel
-            var historyBorder = FindName("HistoryPanelGrid") as Grid;
-            if (historyBorder?.Children[0] is Border historyBorderElement)
-            {
-                historyBorderElement.Background = new SolidColorBrush(panelColor);
-                historyBorderElement.BorderBrush = new SolidColorBrush(borderColor);
-            }
+            HistoryPanel.UpdateThemeColors(new SolidColorBrush(textColor), new SolidColorBrush(buttonColor), 
+                                         new SolidColorBrush(borderColor), new SolidColorBrush(panelColor));
             
             // Apply to main chat area - find it more safely
             var mainGrid = this.Content as Grid;

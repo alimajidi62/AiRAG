@@ -220,75 +220,9 @@
             <!-- History Panel -->
             <!-- This grid contains the history panel where previous questions are displayed -->
             <Grid Grid.Column="0" x:Name="HistoryPanelGrid">
-                <Border Background="#E0E0E0" Padding="16" Margin="0,40,0,24" CornerRadius="0" BorderBrush="#808080" BorderThickness="1">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        
-                        <!-- Title for the history panel -->
-                        <TextBlock Text="History" FontSize="20" FontWeight="Bold"
-                            Foreground="#000000" Margin="0,0,0,16" Grid.Row="0" />
-                        
-                        <!-- Button to clear the history -->
-                        <Button Name="ClearHistoryButton"
-                            Content="Clear History"
-                            Background="#E1E1E1"
-                            Foreground="#000000"
-                            FontWeight="Normal"
-                            FontSize="14"
-                            Padding="8,4"
-                            Margin="0,0,0,16"
-                            BorderThickness="1"
-                            BorderBrush="#A0A0A0"
-                            Cursor="Hand"
-                            Click="ClearHistoryButton_Click" 
-                            Grid.Row="1" />
-                        
-                        <!-- Scrollable list of history items -->
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="2">
-                            <ItemsControl Name="HistoryItemsPanel">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <!-- Each history item is displayed as a button -->
-                                        <Button Margin="0,0,0,8"
-                                            Padding="8"
-                                            Background="#FFFFFF"
-                                            Foreground="#000000"
-                                            BorderBrush="#808080"
-                                            BorderThickness="1"
-                                            HorizontalContentAlignment="Left"
-                                            Cursor="Hand"
-                                            Click="HistoryButton_Click"
-                                            FontWeight="Normal"
-                                            FontSize="14">
-                                            <StackPanel>
-                                                <TextBlock Text="{Binding Question}" TextWrapping="Wrap" />
-                                                <TextBlock Text="📷 Has Image" 
-                                                          FontSize="12" 
-                                                          Foreground="#006400" 
-                                                          Margin="0,4,0,0">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
-                                                            <Setter Property="Visibility" Value="Collapsed" />
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding HasImage}" Value="True">
-                                                                    <Setter Property="Visibility" Value="Visible" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
-                                            </StackPanel>
-                                        </Button>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </ScrollViewer>
-                    </Grid>
-                </Border>
+                <local:HistoryControl x:Name="HistoryPanel" 
+                                    HistoryItemSelected="HistoryPanel_HistoryItemSelected"
+                                    HistoryCleared="HistoryPanel_HistoryCleared" />
             </Grid>
 
             <!-- Main Chat Area -->
