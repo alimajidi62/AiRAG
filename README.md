@@ -426,7 +426,8 @@ For more Azure AI, RAG, Cognitive Search, and Document Intelligence examples, se
 
 #### WPF
 
-<img width="787" height="851" alt="image" src="https://github.com/user-attachments/assets/d4c67638-d305-4a1b-9e1b-de8c9da3e4dd" />
+<img width="981" height="791" alt="image" src="https://github.com/user-attachments/assets/051640dd-3a9f-4666-b84a-20959d4efa33" />
+
 
 ---
 need to add llm for anlayse the image 
