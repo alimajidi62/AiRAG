@@ -405,16 +405,16 @@
                                 <!-- Displayed answer -->
                                 <TextBlock Text="Answer:" FontWeight="Bold" Foreground="#000000"
                                     Margin="0,0,0,4" FontSize="16" />
-                                <TextBox Name="AnswerTextBox"
+                                <RichTextBox Name="AnswerRichTextBox"
                                     FontSize="18"
                                     Foreground="#000000"
-                                    TextWrapping="Wrap"
                                     IsReadOnly="True"
                                     BorderThickness="0"
                                     Background="Transparent"
                                     IsTabStop="False"
                                     VerticalScrollBarVisibility="Auto"
-                                    AcceptsReturn="True" />
+                                    HorizontalScrollBarVisibility="Disabled"
+                                    Block.LineHeight="1.2" />
                             </StackPanel>
                         </ScrollViewer>
                     </Border>
