@@ -59,7 +59,7 @@ namespace chatbot
             string question = QuestionTextBox.Text;
             if (string.IsNullOrWhiteSpace(question) && string.IsNullOrEmpty(selectedImagePath))
             {
-                AnswerTextBlock.Text = "Please enter a question or select an image.";
+                AnswerTextBox.Text = "Please enter a question or select an image.";
                 return;
             }
 
@@ -77,8 +77,8 @@ namespace chatbot
             }
 
             SpinnerOverlay.Visibility = Visibility.Collapsed; // Hide spinner
-            AnswerTextBlock.Text = answer;
-            DisplayedQuestionTextBlock.Text = question;
+            AnswerTextBox.Text = answer;
+            DisplayedQuestionTextBox.Text = question;
             AskButton.IsEnabled = true;
 
             // Add to history
@@ -99,8 +99,8 @@ namespace chatbot
             if (sender is Button btn && btn.DataContext is HistoryItem item)
             {
                 QuestionTextBox.Text = item.Question;
-                AnswerTextBlock.Text = item.Answer;
-                DisplayedQuestionTextBlock.Text = item.Question;
+                AnswerTextBox.Text = item.Answer;
+                DisplayedQuestionTextBox.Text = item.Question;
                 
                 // Handle image if present
                 if (item.HasImage && File.Exists(item.ImagePath))
@@ -273,8 +273,8 @@ private void ToggleHistoryButton_Click(object sender, RoutedEventArgs e)
             }
             
             // Apply to display area
-            var answerTextBlock = FindName("AnswerTextBlock") as FrameworkElement;
-            var displayBorder = answerTextBlock?.Parent;
+            var answerTextBox = FindName("AnswerTextBox") as FrameworkElement;
+            var displayBorder = answerTextBox?.Parent;
             while (displayBorder != null && !(displayBorder is Border))
                 displayBorder = ((FrameworkElement)displayBorder).Parent;
             
@@ -354,6 +354,11 @@ private void ToggleHistoryButton_Click(object sender, RoutedEventArgs e)
                     textBlock.Name != "ImageStatusText") // Keep status text gray
                 {
                     textBlock.Foreground = textBrush;
+                }
+                else if (child is TextBox textBox && textBox.IsReadOnly && 
+                         (textBox.Name == "AnswerTextBox" || textBox.Name == "DisplayedQuestionTextBox"))
+                {
+                    textBox.Foreground = textBrush;
                 }
                 else if (child is Button button)
                 {

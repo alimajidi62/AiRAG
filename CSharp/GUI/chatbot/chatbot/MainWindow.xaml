@@ -393,18 +393,28 @@
                                 <!-- Displayed question -->
                                 <TextBlock Text="Question:" FontWeight="Bold" Foreground="#000000"
                                     Margin="0,0,0,4" FontSize="16" />
-                                <TextBlock Name="DisplayedQuestionTextBlock"
+                                <TextBox Name="DisplayedQuestionTextBox"
                                     FontSize="15"
                                     Foreground="#000000"
                                     TextWrapping="Wrap"
-                                    Margin="0,0,0,12" />
+                                    Margin="0,0,0,12"
+                                    IsReadOnly="True"
+                                    BorderThickness="0"
+                                    Background="Transparent"
+                                    IsTabStop="False" />
                                 <!-- Displayed answer -->
                                 <TextBlock Text="Answer:" FontWeight="Bold" Foreground="#000000"
                                     Margin="0,0,0,4" FontSize="16" />
-                                <TextBlock Name="AnswerTextBlock"
+                                <TextBox Name="AnswerTextBox"
                                     FontSize="18"
                                     Foreground="#000000"
-                                    TextWrapping="Wrap" />
+                                    TextWrapping="Wrap"
+                                    IsReadOnly="True"
+                                    BorderThickness="0"
+                                    Background="Transparent"
+                                    IsTabStop="False"
+                                    VerticalScrollBarVisibility="Auto"
+                                    AcceptsReturn="True" />
                             </StackPanel>
                         </ScrollViewer>
                     </Border>
