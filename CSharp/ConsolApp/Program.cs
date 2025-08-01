@@ -11,7 +11,7 @@ using Azure.Search.Documents.Indexes.Models;
 async Task RunAsync()
 {
     // Read all keys and endpoints from Appkey.txt
-    string[] lines = File.ReadAllLines("../../../../Appkey.txt");
+    string[] lines = File.ReadAllLines("../../../../../Appkey.txt");
     string endpoint = lines[0].Trim();
     string apiKey = lines[1].Trim();
     string searchKey = lines[2].Trim();

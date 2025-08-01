@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using Microsoft.Win32;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using WinFormsColorDialog = System.Windows.Forms.ColorDialog;
 using WinFormsDialogResult = System.Windows.Forms.DialogResult;
 using WpfColor = System.Windows.Media.Color;
@@ -25,6 +27,7 @@ namespace chatbot
     {
         private ChatService chatService;
         private ObservableCollection<HistoryItem> historyItems = new ObservableCollection<HistoryItem>();
+        private ObservableCollection<DocumentInfo> documentItems = new ObservableCollection<DocumentInfo>();
         private readonly string historyFile = "chat_history.json";
         private string selectedImagePath = string.Empty;
         private WpfColor currentBackgroundColor = WpfColor.FromRgb(240, 240, 240); // Default classic gray
@@ -34,8 +37,10 @@ namespace chatbot
             InitializeComponent();
             chatService = new ChatService();
             HistoryItemsPanel.ItemsSource = historyItems;
+            DocumentItemsControl.ItemsSource = documentItems;
             LoadHistory();
             LoadSavedColorTheme();
+            LoadDocumentList();
             
             // Wire up events for the ColorSelectionControl
             ColorSelectionPanel.ColorThemeSelected += ColorSelectionPanel_ColorThemeSelected;
@@ -321,6 +326,11 @@ private void ToggleHistoryButton_Click(object sender, RoutedEventArgs e)
                         // Only update text color for theme preview buttons
                         button.Foreground = textBrush;
                     }
+                    else if (button.Name == "AddDocumentButton")
+                    {
+                        // Keep the green background for the Add Document button, but update text
+                        button.Foreground = Brushes.White;
+                    }
                     else
                     {
                         // Update all other buttons
@@ -389,6 +399,136 @@ private void ToggleHistoryButton_Click(object sender, RoutedEventArgs e)
             {
                 // Use default theme if loading fails
             }
+        }
+
+        // Document Management Methods
+        private void DocumentManagementButton_Click(object sender, RoutedEventArgs e)
+        {
+            DocumentManagementPanel.Visibility = DocumentManagementPanel.Visibility == Visibility.Visible 
+                ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private void CloseDocumentPanelButton_Click(object sender, RoutedEventArgs e)
+        {
+            DocumentManagementPanel.Visibility = Visibility.Collapsed;
+        }
+
+        private async void AddDocumentButton_Click(object sender, RoutedEventArgs e)
+        {
+            string url = DocumentUrlTextBox.Text.Trim();
+            if (string.IsNullOrEmpty(url))
+            {
+                ShowDocumentStatus("Please enter a valid URL.", false);
+                return;
+            }
+
+            if (!Uri.TryCreate(url, UriKind.Absolute, out _))
+            {
+                ShowDocumentStatus("Please enter a valid URL format.", false);
+                return;
+            }
+
+            // Show progress
+            ProgressSection.Visibility = Visibility.Visible;
+            AddDocumentButton.IsEnabled = false;
+            DocumentUrlTextBox.IsEnabled = false;
+
+            var progress = new Progress<string>(status => 
+            {
+                Dispatcher.Invoke(() => ProgressStatusText.Text = status);
+            });
+
+            try
+            {
+                var result = await chatService.AddDocumentFromUrlAsync(url, progress);
+                
+                if (result.Success)
+                {
+                    ShowDocumentStatus(result.Message, true);
+                    DocumentUrlTextBox.Clear();
+                    await LoadDocumentList(); // Refresh the document list
+                }
+                else
+                {
+                    ShowDocumentStatus(result.Message, false);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowDocumentStatus($"Unexpected error: {ex.Message}", false);
+            }
+            finally
+            {
+                // Hide progress and re-enable controls
+                ProgressSection.Visibility = Visibility.Collapsed;
+                AddDocumentButton.IsEnabled = true;
+                DocumentUrlTextBox.IsEnabled = true;
+            }
+        }
+
+        private async void RemoveDocumentButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is string documentId)
+            {
+                var result = MessageBox.Show("Are you sure you want to remove this document?", 
+                    "Confirm Removal", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                
+                if (result == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        var removeResult = await chatService.RemoveDocumentAsync(documentId);
+                        
+                        if (removeResult.Success)
+                        {
+                            ShowDocumentStatus(removeResult.Message, true);
+                            await LoadDocumentList(); // Refresh the document list
+                        }
+                        else
+                        {
+                            ShowDocumentStatus(removeResult.Message, false);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowDocumentStatus($"Error removing document: {ex.Message}", false);
+                    }
+                }
+            }
+        }
+
+        private async Task LoadDocumentList()
+        {
+            try
+            {
+                var documents = await chatService.GetUploadedDocumentsAsync();
+                documentItems.Clear();
+                foreach (var doc in documents)
+                {
+                    documentItems.Add(doc);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowDocumentStatus($"Error loading documents: {ex.Message}", false);
+            }
+        }
+
+        private void ShowDocumentStatus(string message, bool isSuccess)
+        {
+            DocumentStatusMessage.Text = message;
+            DocumentStatusMessage.Foreground = new SolidColorBrush(isSuccess ? Colors.Green : Colors.Red);
+            DocumentStatusMessage.Visibility = Visibility.Visible;
+
+            // Auto-hide after 5 seconds
+            var timer = new System.Windows.Threading.DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(5);
+            timer.Tick += (s, e) =>
+            {
+                DocumentStatusMessage.Visibility = Visibility.Collapsed;
+                timer.Stop();
+            };
+            timer.Start();
         }
         
     }

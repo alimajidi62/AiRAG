@@ -42,6 +42,23 @@
             Click="ColorThemeButton_Click"
             Panel.ZIndex="100" />
 
+        <!-- Document Management Button -->
+        <Button x:Name="DocumentManagementButton"
+            Content="📄 Documents"
+            Background="#E1E1E1"
+            Foreground="#000000"
+            FontWeight="Normal"
+            FontSize="14"
+            Padding="8,4"
+            Margin="270,24,0,0"
+            BorderThickness="1"
+            BorderBrush="#A0A0A0"
+            Cursor="Hand"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Click="DocumentManagementButton_Click"
+            Panel.ZIndex="100" />
+
         <!-- Color Selection Panel -->
         <local:ColorSelectionControl x:Name="ColorSelectionPanel"
                                    Margin="150,60,0,0"
@@ -51,6 +68,144 @@
                                    Panel.ZIndex="200"
                                    ColorThemeSelected="ColorSelectionPanel_ColorThemeSelected"
                                    ColorPanelCloseRequested="ColorSelectionPanel_ColorPanelCloseRequested" />
+
+        <!-- Document Management Panel -->
+        <Border x:Name="DocumentManagementPanel"
+                Background="#F8F8F8"
+                BorderBrush="#A0A0A0"
+                BorderThickness="1"
+                CornerRadius="5"
+                Margin="270,60,0,0"
+                Padding="16"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Visibility="Collapsed"
+                Panel.ZIndex="200"
+                Width="400"
+                MaxHeight="500">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Title and Close Button -->
+                <Grid Grid.Row="0" Margin="0,0,0,16">
+                    <TextBlock Text="Document Management" 
+                               FontSize="18" 
+                               FontWeight="Bold" 
+                               VerticalAlignment="Center" />
+                    <Button x:Name="CloseDocumentPanelButton"
+                            Content="❌"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            FontSize="16"
+                            Cursor="Hand"
+                            HorizontalAlignment="Right"
+                            Click="CloseDocumentPanelButton_Click" />
+                </Grid>
+
+                <!-- URL Input Section -->
+                <TextBlock Grid.Row="1" 
+                           Text="Add Document from URL:" 
+                           FontWeight="Bold" 
+                           Margin="0,0,0,8" />
+                
+                <TextBox x:Name="DocumentUrlTextBox"
+                         Grid.Row="2"
+                         Margin="0,0,0,8"
+                         Padding="8"
+                         FontSize="14"
+                         ToolTip="Enter Azure Blob Storage PDF URL" />
+
+                <Button x:Name="AddDocumentButton"
+                        Grid.Row="3"
+                        Content="📤 Add Document"
+                        Background="#4CAF50"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        Padding="12,8"
+                        Margin="0,0,0,16"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Click="AddDocumentButton_Click" />
+
+                <!-- Progress Section -->
+                <StackPanel x:Name="ProgressSection" 
+                            Grid.Row="4" 
+                            Visibility="Collapsed"
+                            Margin="0,0,0,16">
+                    <TextBlock x:Name="ProgressStatusText" 
+                               Text="Processing document..." 
+                               FontStyle="Italic" 
+                               Margin="0,0,0,4" />
+                    <ProgressBar x:Name="DocumentProgressBar" 
+                                 Height="6" 
+                                 IsIndeterminate="True" />
+                </StackPanel>
+
+                <!-- Document List -->
+                <ScrollViewer Grid.Row="5" 
+                              VerticalScrollBarVisibility="Auto"
+                              MaxHeight="200">
+                    <StackPanel x:Name="DocumentListPanel">
+                        <TextBlock Text="Uploaded Documents:" 
+                                   FontWeight="Bold" 
+                                   Margin="0,0,0,8" />
+                        <ItemsControl x:Name="DocumentItemsControl">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#E8F5E8" 
+                                            BorderBrush="#4CAF50" 
+                                            BorderThickness="1" 
+                                            Margin="0,2" 
+                                            Padding="8"
+                                            CornerRadius="3">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding Name}" 
+                                                           FontWeight="Bold" 
+                                                           FontSize="12" />
+                                                <TextBlock Text="{Binding UploadDate}" 
+                                                           FontSize="10" 
+                                                           Foreground="#666" />
+                                            </StackPanel>
+                                            <Button Grid.Column="1"
+                                                    Content="🗑️"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    FontSize="12"
+                                                    Cursor="Hand"
+                                                    ToolTip="Remove document"
+                                                    Click="RemoveDocumentButton_Click"
+                                                    Tag="{Binding Id}" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Status Message -->
+                <TextBlock x:Name="DocumentStatusMessage" 
+                           Grid.Row="6" 
+                           Margin="0,8,0,0" 
+                           FontSize="12" 
+                           Foreground="#666" 
+                           TextWrapping="Wrap" 
+                           Visibility="Collapsed" />
+            </Grid>
+        </Border>
 
         <!-- Main layout grid -->
         <!-- This grid divides the window into two columns: History and Main Chat Area -->
