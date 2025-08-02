@@ -31,7 +31,11 @@ public class ChatService
 
     public ChatService()
     {
-        var inputPath = "Appkey.bin";
+        var inputPath = "Appkey.bin";// api key and endpoint are stored in this file
+        if (!File.Exists(inputPath))
+        {
+            throw new FileNotFoundException($"Configuration file '{inputPath}' not found.");
+        }
         var seed = 12345;
         var shuffled = File.ReadAllBytes(inputPath);
         // Generate same shuffle order
