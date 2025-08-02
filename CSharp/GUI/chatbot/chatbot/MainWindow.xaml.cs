@@ -19,7 +19,9 @@ namespace chatbot
         public string Question { get; set; }
         public string Answer { get; set; }
         public string ImagePath { get; set; }
+        public string GeneratedImagePath { get; set; }
         public bool HasImage => !string.IsNullOrEmpty(ImagePath);
+        public bool HasGeneratedImage => !string.IsNullOrEmpty(GeneratedImagePath);
     }
 
     public partial class MainWindow : Window

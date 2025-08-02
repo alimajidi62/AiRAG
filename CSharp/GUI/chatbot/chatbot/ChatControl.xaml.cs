@@ -15,6 +15,7 @@ namespace chatbot
     {
         private ChatService chatService;
         private string selectedImagePath = string.Empty;
+        private string currentGeneratedImagePath = string.Empty;
 
         // Events to communicate with parent window
         public event EventHandler<HistoryItem> QuestionAsked;
@@ -52,18 +53,34 @@ namespace chatbot
             SpinnerOverlay.Visibility = Visibility.Visible; // Show spinner
 
             string answer;
+            string generatedImagePath = string.Empty;
+
             if (!string.IsNullOrEmpty(selectedImagePath))
             {
                 answer = await chatService.AskQuestionWithImageAsync(question, selectedImagePath);
             }
             else
             {
-                answer = await chatService.AskQuestionAsync(question);
+                // Check if this is an image generation request
+                var (isImageRequest, response, imagePath) = await chatService.ProcessMessageAsync(question);
+                answer = response;
+                generatedImagePath = imagePath;
             }
 
             SpinnerOverlay.Visibility = Visibility.Collapsed; // Hide spinner
             SetAnswerText(answer);
             DisplayedQuestionTextBox.Text = question;
+            
+            // Display generated image if available
+            if (!string.IsNullOrEmpty(generatedImagePath) && File.Exists(generatedImagePath))
+            {
+                DisplayGeneratedImage(generatedImagePath);
+            }
+            else
+            {
+                HideGeneratedImage();
+            }
+            
             AskButton.IsEnabled = true;
 
             // Raise event to notify parent about new question/answer
@@ -71,7 +88,8 @@ namespace chatbot
             {
                 Question = question,
                 Answer = answer,
-                ImagePath = selectedImagePath
+                ImagePath = selectedImagePath,
+                GeneratedImagePath = generatedImagePath
             };
             QuestionAsked?.Invoke(this, historyItem);
 
@@ -127,13 +145,85 @@ namespace chatbot
             ImageStatusText.Visibility = Visibility.Collapsed;
         }
 
+        private void DisplayGeneratedImage(string imagePath)
+        {
+            if (!string.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
+            {
+                currentGeneratedImagePath = imagePath;
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.UriSource = new Uri(imagePath);
+                bitmap.DecodePixelWidth = 400; // Limit size for display
+                bitmap.EndInit();
+
+                GeneratedImageDisplay.Source = bitmap;
+                GeneratedImagePanel.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void HideGeneratedImage()
+        {
+            currentGeneratedImagePath = string.Empty;
+            GeneratedImageDisplay.Source = null;
+            GeneratedImagePanel.Visibility = Visibility.Collapsed;
+        }
+
+        private void SaveGeneratedImageButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(currentGeneratedImagePath) || !File.Exists(currentGeneratedImagePath))
+            {
+                MessageBox.Show("No generated image to save.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "PNG files (*.png)|*.png|JPEG files (*.jpg)|*.jpg|All files (*.*)|*.*",
+                Title = "Save Generated Image",
+                DefaultExt = ".png",
+                FileName = $"Generated_Image_{DateTime.Now:yyyyMMdd_HHmmss}.png"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    File.Copy(currentGeneratedImagePath, saveFileDialog.FileName, true);
+                    MessageBox.Show($"Image saved successfully to:\n{saveFileDialog.FileName}", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error saving image: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void CopyImagePathButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(currentGeneratedImagePath))
+            {
+                MessageBox.Show("No generated image path to copy.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                Clipboard.SetText(currentGeneratedImagePath);
+                MessageBox.Show("Image path copied to clipboard!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error copying to clipboard: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         public void DisplayHistoryItem(HistoryItem item)
         {
             QuestionTextBox.Text = item.Question;
             SetAnswerText(item.Answer);
             DisplayedQuestionTextBox.Text = item.Question;
 
-            // Handle image if present
+            // Handle input image if present
             if (item.HasImage && File.Exists(item.ImagePath))
             {
                 selectedImagePath = item.ImagePath;
@@ -142,6 +232,16 @@ namespace chatbot
             else
             {
                 ClearSelectedImage();
+            }
+
+            // Handle generated image if present
+            if (item.HasGeneratedImage && File.Exists(item.GeneratedImagePath))
+            {
+                DisplayGeneratedImage(item.GeneratedImagePath);
+            }
+            else
+            {
+                HideGeneratedImage();
             }
         }
 

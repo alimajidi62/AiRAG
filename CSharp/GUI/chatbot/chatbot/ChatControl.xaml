@@ -125,6 +125,45 @@
                             VerticalScrollBarVisibility="Auto"
                             HorizontalScrollBarVisibility="Disabled"
                             Block.LineHeight="1.2" />
+                        
+                        <!-- Generated image display -->
+                        <StackPanel Name="GeneratedImagePanel" Visibility="Collapsed" Margin="0,12,0,0">
+                            <TextBlock Text="Generated Image:" FontWeight="Bold" Foreground="#000000"
+                                Margin="0,0,0,4" FontSize="16" />
+                            <Border BorderBrush="#808080" BorderThickness="1" CornerRadius="4" HorizontalAlignment="Left">
+                                <Image Name="GeneratedImageDisplay"
+                                    MaxHeight="400"
+                                    MaxWidth="400"
+                                    Margin="4"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top" />
+                            </Border>
+                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                <Button Name="SaveGeneratedImageButton"
+                                    Content="💾 Save Image"
+                                    MinHeight="30"
+                                    FontSize="12"
+                                    Background="#E1E1E1"
+                                    Foreground="#000000"
+                                    BorderThickness="1"
+                                    BorderBrush="#A0A0A0"
+                                    Padding="12,0"
+                                    Cursor="Hand"
+                                    Click="SaveGeneratedImageButton_Click"
+                                    Margin="0,0,8,0" />
+                                <Button Name="CopyImagePathButton"
+                                    Content="📋 Copy Path"
+                                    MinHeight="30"
+                                    FontSize="12"
+                                    Background="#E1E1E1"
+                                    Foreground="#000000"
+                                    BorderThickness="1"
+                                    BorderBrush="#A0A0A0"
+                                    Padding="12,0"
+                                    Cursor="Hand"
+                                    Click="CopyImagePathButton_Click" />
+                            </StackPanel>
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </Border>

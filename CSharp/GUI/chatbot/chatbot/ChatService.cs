@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Azure;
 using Azure.AI.OpenAI;
@@ -12,6 +13,8 @@ using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using Azure.AI.FormRecognizer.DocumentAnalysis;
 using OpenAI.Chat;
+using OpenAI.Images;
+using System.Net.Http;
 using BinaryData = System.BinaryData;
 
 namespace chatbot;
@@ -20,6 +23,7 @@ public class ChatService
 {
     private readonly string apiKey;
     private readonly ChatClient chatClient;
+    private readonly ImageClient imageClient;
     private readonly string docIntelligenceEndpoint;
     private readonly string docIntelligenceKey;
     private readonly string endpoint;
@@ -57,6 +61,7 @@ public class ChatService
         searchClient = new SearchClient(new Uri(searchEndpoint), indexName, searchCredential);
         var azureClient = new AzureOpenAIClient(new Uri(endpoint), credential);
         chatClient = azureClient.GetChatClient("gpt-4.1");
+        imageClient = azureClient.GetImageClient("dall-e-3"); // Add DALL-E 3 client
     }
 
     public async Task<string> AskQuestionAsync(string userQuestion)
@@ -156,6 +161,135 @@ public class ChatService
         {
             return $"An error occurred while processing the image: {ex.Message}";
         }
+    }
+
+    public async Task<string> GenerateImageAsync(string prompt, string quality = "standard", string size = "1024x1024")
+    {
+        try
+        {
+            var imageGenerationOptions = new ImageGenerationOptions()
+            {
+                Quality = quality == "hd" ? GeneratedImageQuality.High : GeneratedImageQuality.Standard,
+                Size = size switch
+                {
+                    "1792x1024" => GeneratedImageSize.W1792xH1024,
+                    "1024x1792" => GeneratedImageSize.W1024xH1792,
+                    _ => GeneratedImageSize.W1024xH1024
+                },
+                Style = GeneratedImageStyle.Natural,
+                ResponseFormat = GeneratedImageFormat.Uri
+            };
+
+            var imageResult = await imageClient.GenerateImageAsync(prompt, imageGenerationOptions);
+            return imageResult.Value.ImageUri.ToString();
+        }
+        catch (Exception ex)
+        {
+            return $"Error generating image: {ex.Message}";
+        }
+    }
+
+    public async Task<string> DownloadAndSaveImageAsync(string imageUrl, string savePath)
+    {
+        try
+        {
+            using var httpClient = new HttpClient();
+            var imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
+            
+            // Ensure directory exists
+            var directory = Path.GetDirectoryName(savePath);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+            
+            await File.WriteAllBytesAsync(savePath, imageBytes);
+            return savePath;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Failed to download and save image: {ex.Message}");
+        }
+    }
+
+    public async Task<(bool IsImageRequest, string Response, string ImagePath)> ProcessMessageAsync(string userMessage)
+    {
+        // Check if the user is requesting an image generation
+        if (IsImageGenerationRequest(userMessage))
+        {
+            try
+            {
+                // Extract the image description from the message
+                var imagePrompt = ExtractImagePrompt(userMessage);
+                
+                // Generate the image
+                var imageUrl = await GenerateImageAsync(imagePrompt);
+                
+                if (imageUrl.StartsWith("Error"))
+                {
+                    return (true, imageUrl, string.Empty);
+                }
+                
+                // Create a local path to save the image
+                var fileName = $"generated_image_{DateTime.Now:yyyyMMdd_HHmmss}.png";
+                var savePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "ChatbotImages", fileName);
+                
+                // Download and save the image
+                var localPath = await DownloadAndSaveImageAsync(imageUrl, savePath);
+                
+                return (true, $"I've generated an image based on your request: \"{imagePrompt}\"", localPath);
+            }
+            catch (Exception ex)
+            {
+                return (true, $"Sorry, I couldn't generate the image. Error: {ex.Message}", string.Empty);
+            }
+        }
+        else
+        {
+            // Handle as regular text question
+            var response = await AskQuestionAsync(userMessage);
+            return (false, response, string.Empty);
+        }
+    }
+
+    private bool IsImageGenerationRequest(string message)
+    {
+        var imageKeywords = new[]
+        {
+            "generate an image", "create an image", "draw", "make an image", 
+            "show me an image", "picture of", "image of", "generate picture",
+            "create picture", "draw me", "make a picture", "visualize",
+            "give me an image", "provide an image", "can you show me"
+        };
+
+        var lowerMessage = message.ToLower();
+        return imageKeywords.Any(keyword => lowerMessage.Contains(keyword));
+    }
+
+    private string ExtractImagePrompt(string message)
+    {
+        var lowerMessage = message.ToLower();
+        
+        // Common patterns to extract the actual image description
+        var patterns = new[]
+        {
+            @"(?:generate an image of|create an image of|draw|make an image of|show me an image of|picture of|image of|give me an image of|provide an image of)\s*(.+)",
+            @"(?:can you show me|can you create|can you generate|can you draw|can you make)\s*(?:an image of|a picture of|a drawing of)?\s*(.+)",
+            @"(?:i want to see|i want|i need)\s*(?:an image of|a picture of)?\s*(.+)",
+            @"(?:visualize|illustrate)\s*(.+)"
+        };
+
+        foreach (var pattern in patterns)
+        {
+            var match = Regex.Match(lowerMessage, pattern, RegexOptions.IgnoreCase);
+            if (match.Success && match.Groups.Count > 1)
+            {
+                return match.Groups[1].Value.Trim();
+            }
+        }
+
+        // If no pattern matches, return the original message
+        return message;
     }
 
     private string GetMimeType(string filePath)
